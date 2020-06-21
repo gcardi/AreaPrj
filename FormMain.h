@@ -63,10 +63,11 @@ __published:	// IDE-managed Components
     void __fastcall actAreaExecute(TObject *Sender);
     void __fastcall actAreaUpdate(TObject *Sender);
     void __fastcall comboboxAreaMethodChange(TObject *Sender);
+    void __fastcall FormKeyPress(TObject *Sender, System::WideChar &Key);
 
 public:		// User declarations
     __fastcall TfrmMain(TComponent* Owner);
-	void Render();
+    void Render();
 
 private:	// User declarations
     AreaPrj::Calc calc_;                       // Concrete Controller
@@ -78,6 +79,8 @@ private:	// User declarations
     int startY_ {};
     int ofsX_ {};
     int ofsY_ {};
+    int oldOfsX_ {};
+    int oldOfsY_ {};
     std::unique_ptr<AreaPrj::IAreaCalculator> areaCalc_ { MakeAreaCalculator() };
 
     String GetInputText() const;
@@ -96,6 +99,7 @@ private:	// User declarations
     void InvalidateViewport();
     static std::unique_ptr<TStringList> GetAreaMethodNameList();
     std::unique_ptr<AreaPrj::IAreaCalculator> MakeAreaCalculator() const;
+    void CancelTextDrag();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfrmMain *frmMain;

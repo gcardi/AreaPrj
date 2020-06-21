@@ -181,9 +181,13 @@ void TfrmMain::UpdateModel()
 
 void __fastcall TfrmMain::edtTextSizeKeyPress(TObject *Sender, System::WideChar &Key)
 {
-    if ( Key == VK_RETURN ) {
-        UpdateModel();
-        Key = 0;
+    switch ( Key ) {
+        case VK_RETURN:
+            UpdateModel();
+            Key = 0;
+            break;
+        default:
+            break;
     }
 }
 //---------------------------------------------------------------------------
@@ -200,10 +204,11 @@ void __fastcall TfrmMain::paintboxViewportMouseDown(TObject *Sender, TMouseButto
     dragging_ = false;
     if ( IsDataValid() ) {
         if ( HitTest( X, Y ) ) {
+            oldOfsX_ = ofsX_;
+            oldOfsY_ = ofsY_;
             startX_ = X - ofsX_;
             startY_ = Y - ofsY_;
             dragging_ = true;
-            UpdateModel();
         }
     }
 }
@@ -217,6 +222,9 @@ void __fastcall TfrmMain::paintboxViewportMouseMove(TObject *Sender, TShiftState
         ofsY_ = Y - startY_;
         UpdateModel();
     }
+    else {
+        paintboxViewport->Cursor = HitTest( X, Y ) ? crHandPoint : crCross;
+    }
 
     lblHitTest->Caption =
         IsDataValid() ? HitTest( X, Y ) ? _T( "in" ) : _T( "out" ) : _T( "-" );
@@ -226,13 +234,7 @@ void __fastcall TfrmMain::paintboxViewportMouseMove(TObject *Sender, TShiftState
 void __fastcall TfrmMain::paintboxViewportMouseUp(TObject *Sender, TMouseButton Button,
           TShiftState Shift, int X, int Y)
 {
-    if ( dragging_ ) {
-        ofsX_ = X - startX_;
-        ofsY_ = Y - startY_;
-        UpdateModel();
-        dragging_ = false;
-        lblHitTest->Caption = _T( "-" );
-    }
+    dragging_ = false;
 }
 //---------------------------------------------------------------------------
 
@@ -266,14 +268,14 @@ bool TfrmMain::GetItalic() const
 void __fastcall TfrmMain::actAreaExecute(TObject *Sender)
 {
     TCursorManager CursorManager;
-
-    auto& Model = calc_.GetModel();
     ShowMessage(
         Format(
             _T( "L'area calcolata con il metodo %s è %f u²"  ),
             ARRAYOFCONST((
                 areaCalc_->GetDescription(),
-                static_cast<long double>( areaCalc_->Compute( Model ) )
+                static_cast<long double>(
+                    areaCalc_->Compute( calc_.GetModel() )
+                )
             ))
         )
     );
@@ -292,4 +294,28 @@ void __fastcall TfrmMain::comboboxAreaMethodChange(TObject *Sender)
     areaCalc_ = std::move( MakeAreaCalculator() );
 }
 //---------------------------------------------------------------------------
+
+void TfrmMain::CancelTextDrag()
+{
+    ofsX_ = oldOfsX_;
+    ofsY_ = oldOfsY_;
+    dragging_ = false;
+    UpdateModel();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmMain::FormKeyPress(TObject *Sender, System::WideChar &Key)
+{
+    switch ( Key ) {
+        case VK_ESCAPE:
+            if ( dragging_ ) {
+                CancelTextDrag();
+            }
+            break;
+        default:
+            break;
+    }
+}
+//---------------------------------------------------------------------------
+
 

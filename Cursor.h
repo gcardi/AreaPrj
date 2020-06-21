@@ -14,7 +14,7 @@ public:
     void Restore();
 private:
     TCursor oldCursor_;
-    bool restored_;
+    bool restored_ {};
 };
 
 
