@@ -67,11 +67,17 @@ __published:	// IDE-managed Components
 
 public:		// User declarations
     __fastcall TfrmMain(TComponent* Owner);
-    void Render();
+
+    auto operator->() { return &gui_; }
+    auto operator->() const { return &gui_; }
 
 private:	// User declarations
-    AreaPrj::Calc calc_;                       // Concrete Controller
-    AreaPrj::VCLView<TfrmMain> gui_{ *this };  // Concrete view (proxy)
+    using IntfImpl = AreaPrj::VCLView<TfrmMain>;
+
+    friend IntfImpl;
+
+    AreaPrj::Calc calc_;       // Concrete Controller
+    IntfImpl gui_{ *this };   // Concrete view (proxy)
     std::unique_ptr<AreaPrj::IRenderer> renderer_ { MakeRender() };
     bool dataValid_{ false };
     bool dragging_ {};
@@ -84,10 +90,17 @@ private:	// User declarations
     std::unique_ptr<AreaPrj::IAreaCalculator> areaCalc_ { MakeAreaCalculator() };
 
     String GetInputText() const;
-    String GetInputFontName() const;
-    double GetInputFontSize() const;
-    bool GetBold() const;
-    bool GetItalic() const;
+    void SetInputText( String Val );
+    String GetInputTextFontName() const;
+    void SetInputTextFontName( String Val );
+    double GetInputTextFontSize() const;
+    void SetInputTextFontSize( double Val );
+    bool GetInputTextBold() const;
+    void SetInputTextBold( bool Val );
+    bool GetInputTextItalic() const;
+    void SetInputTextItalic( bool Val );
+
+    void ViewportPan( int Dx, int Dy );
 
     bool HitTest( int X, int Y ) const;
 
@@ -100,6 +113,9 @@ private:	// User declarations
     static std::unique_ptr<TStringList> GetAreaMethodNameList();
     std::unique_ptr<AreaPrj::IAreaCalculator> MakeAreaCalculator() const;
     void CancelTextDrag();
+
+    // Usata dalla parte IView di IntfImpl
+    void Render();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfrmMain *frmMain;

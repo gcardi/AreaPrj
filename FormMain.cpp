@@ -145,15 +145,46 @@ String TfrmMain::GetInputText() const
 }
 //---------------------------------------------------------------------------
 
-String TfrmMain::GetInputFontName() const
+void TfrmMain::SetInputText( String Val )
+{
+    if ( Val != edtText->Text ) {
+        edtText->Text = Val;
+        UpdateModel();
+    }
+}
+//---------------------------------------------------------------------------
+
+String TfrmMain::GetInputTextFontName() const
 {
     return comboboxFontName->Text;
 }
 //---------------------------------------------------------------------------
 
-double TfrmMain::GetInputFontSize() const
+void TfrmMain::SetInputTextFontName( String Val )
+{
+    if ( Val != comboboxFontName->Text ) {
+        comboboxFontName->Text = Val;
+        UpdateModel();
+    }
+}
+//---------------------------------------------------------------------------
+
+double TfrmMain::GetInputTextFontSize() const
 {
     return edtTextSize->Text.ToDouble();
+}
+//---------------------------------------------------------------------------
+
+void TfrmMain::SetInputTextFontSize( double Val )
+{
+    if ( edtTextSize->Text.ToDouble() != Val ) {
+        edtTextSize->Text =
+            Format(
+                _T( "%g" ),
+                ARRAYOFCONST(( static_cast<long double>( Val ) ))
+            );
+        UpdateModel();
+    }
 }
 //---------------------------------------------------------------------------
 
@@ -169,8 +200,8 @@ void TfrmMain::UpdateModel()
     dataValid_ = TextSize < 1000.0 && TextSize > 0.0;
     if ( IsDataValid() ) {
         calc_.SetText(
-            GetInputText(), GetInputFontName(), TextSize, ofsX_, ofsY_,
-            GetBold(), GetItalic()
+            GetInputText(), GetInputTextFontName(), TextSize, ofsX_, ofsY_,
+            GetInputTextBold(), GetInputTextItalic()
         );
     }
     else {
@@ -253,15 +284,33 @@ void __fastcall TfrmMain::comboboxRendererChange(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-bool TfrmMain::GetBold() const
+bool TfrmMain::GetInputTextBold() const
 {
     return checkboxBold->Checked;
 }
 //---------------------------------------------------------------------------
 
-bool TfrmMain::GetItalic() const
+void TfrmMain::SetInputTextBold( bool Val )
+{
+    if ( checkboxBold->Checked != Val ) {
+        checkboxBold->Checked = Val;
+        UpdateModel();
+    }
+}
+//---------------------------------------------------------------------------
+
+bool TfrmMain::GetInputTextItalic() const
 {
     return checkboxItalic->Checked;
+}
+//---------------------------------------------------------------------------
+
+void TfrmMain::SetInputTextItalic( bool Val )
+{
+    if ( checkboxItalic->Checked != Val ) {
+        checkboxItalic->Checked = Val;
+        UpdateModel();
+    }
 }
 //---------------------------------------------------------------------------
 
@@ -318,4 +367,13 @@ void __fastcall TfrmMain::FormKeyPress(TObject *Sender, System::WideChar &Key)
 }
 //---------------------------------------------------------------------------
 
+void TfrmMain::ViewportPan( int Dx, int Dy )
+{
+    if ( !dragging_ ) {
+        ofsX_ += Dx;
+        ofsY_ += Dy;
+        UpdateModel();
+    }
+}
+//---------------------------------------------------------------------------
 
