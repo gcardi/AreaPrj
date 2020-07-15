@@ -20,6 +20,7 @@
 #include "IRenderer.h"
 #include "VCLView.h"
 #include "IAreaCalculator.h"
+#include "IModel.h"
 
 class TfrmMain : public TForm
 {
@@ -68,6 +69,7 @@ __published:	// IDE-managed Components
 public:		// User declarations
     __fastcall TfrmMain(TComponent* Owner);
 
+    // To access IView and IObserver methods use (*this)-> in place of this->
     auto operator->() { return &gui_; }
     auto operator->() const { return &gui_; }
 
@@ -77,7 +79,7 @@ private:	// User declarations
     friend IntfImpl;
 
     AreaPrj::Calc calc_;       // Concrete Controller
-    IntfImpl gui_{ *this };   // Concrete view (proxy)
+    IntfImpl gui_{ *this };    // Concrete view (proxy)
     std::unique_ptr<AreaPrj::IRenderer> renderer_ { MakeRender() };
     bool dataValid_{ false };
     bool dragging_ {};
@@ -99,10 +101,11 @@ private:	// User declarations
     void SetInputTextBold( bool Val );
     bool GetInputTextItalic() const;
     void SetInputTextItalic( bool Val );
-
     void ViewportPan( int Dx, int Dy );
-
     bool HitTest( int X, int Y ) const;
+    AreaPrj::IModel const & GetModel() const { return calc_.GetModel(); }
+    double GetThickness() const;
+    void SetThickness( double Val );
 
     void ShowArea( double Val );
     void UpdateModel();

@@ -8,6 +8,7 @@
 #include <memory>
 #include <algorithm>
 #include <vector>
+#include <thread>
 
 #include "GDIRenderer.h"
 #include "GDIPlusRenderer.h"
@@ -31,6 +32,7 @@ using std::end;
 using std::back_inserter;
 using std::make_unique;
 using std::max;
+using std::thread;
 
 using AreaPrj::IRenderer;
 using AreaPrj::RetrieveFontList;
@@ -67,7 +69,9 @@ std::unique_ptr<TStringList> TfrmMain::GetAreaMethodNameList()
     auto SL = make_unique<TStringList>();
     SL->Append( PolynomialAreaCalc::GetName() );
     SL->Append( StochasticAreaCalc::GetName() );
-    SL->Append( StochasticMTAreaCalc::GetName() );
+    if ( thread::hardware_concurrency() ) {
+        SL->Append( StochasticMTAreaCalc::GetName() );
+    }
     return SL;
 }
 //---------------------------------------------------------------------------
@@ -79,7 +83,9 @@ std::unique_ptr<AreaPrj::IAreaCalculator> TfrmMain::MakeAreaCalculator() const
         case 1:
             return make_unique<StochasticAreaCalc>( 1000000 );
         case 2:
-            return make_unique<StochasticMTAreaCalc>( 1000000, 6 );
+            return make_unique<StochasticMTAreaCalc>(
+                1000000, thread::hardware_concurrency()
+            );
         default:
             return make_unique<PolynomialAreaCalc>();
     }
@@ -115,8 +121,8 @@ void TfrmMain::InvalidateViewport()
 
 void TfrmMain::Render()
 {
-    auto& Model = calc_.GetModel();
-    renderer_->PrepareRendering( calc_.GetModel() );
+    //auto& Model = calc_.GetModel();
+    renderer_->PrepareRendering( GetModel() );
     InvalidateViewport();
 }
 //---------------------------------------------------------------------------
@@ -225,7 +231,7 @@ void __fastcall TfrmMain::edtTextSizeKeyPress(TObject *Sender, System::WideChar 
 
 bool TfrmMain::HitTest( int X, int Y ) const
 {
-    return calc_.GetModel().HitTest( X, Y );
+    return GetModel().HitTest( X, Y );
 }
 //---------------------------------------------------------------------------
 
@@ -279,7 +285,7 @@ void __fastcall TfrmMain::pnlViewportResize(TObject *Sender)
 void __fastcall TfrmMain::comboboxRendererChange(TObject *Sender)
 {
     renderer_ = std::move( MakeRender() );
-    renderer_->PrepareRendering( calc_.GetModel() );
+    renderer_->PrepareRendering( GetModel() );
     InvalidateViewport();
 }
 //---------------------------------------------------------------------------
@@ -323,7 +329,7 @@ void __fastcall TfrmMain::actAreaExecute(TObject *Sender)
             ARRAYOFCONST((
                 areaCalc_->GetDescription(),
                 static_cast<long double>(
-                    areaCalc_->Compute( calc_.GetModel() )
+                    areaCalc_->Compute( GetModel() )
                 )
             ))
         )

@@ -5,7 +5,7 @@
 
 namespace AreaPrj {
 
-//class IModel;
+class IModel;
 
 class IView {
 public:
@@ -20,6 +20,7 @@ public:
     bool GetItalic() const { return DoGetItalic(); }
     void SetItalic( bool Val ) { DoSetItalic( Val ); }
     void Pan( int Dx, int Dy ) { DoPan( Dx, Dy ); }
+    IModel const & GetModel() const { return DoGetModel(); }
 protected:
     virtual String DoGetText() const = 0;
     virtual void DoSetText( String Val ) = 0;
@@ -32,6 +33,7 @@ protected:
     virtual bool DoGetItalic() const = 0;
     virtual void DoSetItalic( bool Val ) = 0;
     virtual void DoPan( int Dx, int Dy ) = 0;
+    virtual IModel const & DoGetModel() const = 0;
 };
 
 } // End of namespace AreaPrj

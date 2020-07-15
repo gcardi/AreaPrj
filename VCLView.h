@@ -9,8 +9,9 @@
 
 namespace AreaPrj {
 
-// Questa classe è necessaria perché per limiti del framework VCL
-// non è possibile avere la multipla ereditarietà sul un discendete di TForm
+// Questa classe è necessaria perché, per limiti imposto della singola
+// ereditarietà del linguaggio Delphi (e quindi del framework VCL),
+// non è possibile avere la multipla ereditarietà sul un discendete di TForm.
 // Quindi, la form principale "aggrega" questa classe per esporla come
 // istanza di una classe implementata su un gruppo di interfacce pure
 
@@ -34,6 +35,7 @@ protected:
     virtual bool DoGetItalic() const override { return gui_.GetInputTextItalic(); }
     virtual void DoSetItalic( bool Val ) override { gui_.SetInputTextItalic( Val ); }
     virtual void DoPan( int Dx, int Dy ) override { gui_.ViewportPan( Dx, Dy ); }
+    virtual IModel const & DoGetModel() const override { return gui_.GetModel(); }
 private:
     T& gui_;
 };
