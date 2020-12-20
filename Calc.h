@@ -9,13 +9,11 @@
 
 namespace AreaPrj {
 
-class IObserver;
-
 class Calc : public IController
 {
 public:
-    void AddObserverToModel( IObserver& Observer );
 protected:
+    virtual void DoAddObserverToModel( IObserver& Observer ) override;
     virtual IModel const & DoGetModel() const override { return geo_; }
     virtual void DoSetText( String Text, String FontName, double FontSize,
                             double DX, double DY, bool Bold, bool Italic ) override;

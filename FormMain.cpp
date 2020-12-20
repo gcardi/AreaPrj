@@ -44,15 +44,21 @@ using AreaPrj::StochasticMTAreaCalc;
 
 //---------------------------------------------------------------------------
 
+namespace ValidCtrl {
+void Test() {
+    new ::TfrmMain( nullptr );
+}
+}
+
 __fastcall TfrmMain::TfrmMain(TComponent* Owner)
-    : TForm(Owner)
+    : TFormForm(Owner)
 {
     pnlViewport->ControlStyle = pnlViewport->ControlStyle << csOpaque;
 
     comboboxFontName->Items->Assign( RetrieveFontList().get() );
     comboboxFontName->ItemIndex =
         max( comboboxFontName->Items->IndexOf( Font->Name ), 0 );
-    calc_.AddObserverToModel( gui_ );
+    GetController().AddObserverToModel( *this );
 
     comboboxAreaMethod->Items->Assign( GetAreaMethodNameList().get() );
     comboboxAreaMethod->ItemIndex = 0;
@@ -205,7 +211,7 @@ void TfrmMain::UpdateModel()
     auto TextSize = StrToFloatDef( edtTextSize->Text, -1.0 );
     dataValid_ = TextSize < 1000.0 && TextSize > 0.0;
     if ( IsDataValid() ) {
-        calc_.SetText(
+        GetController().SetText(
             GetInputText(), GetInputTextFontName(), TextSize, ofsX_, ofsY_,
             GetInputTextBold(), GetInputTextItalic()
         );
@@ -382,4 +388,5 @@ void TfrmMain::ViewportPan( int Dx, int Dy )
     }
 }
 //---------------------------------------------------------------------------
+
 

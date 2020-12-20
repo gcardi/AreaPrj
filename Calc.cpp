@@ -32,7 +32,7 @@ using std::advance;
 
 namespace AreaPrj {
 
-void Calc::AddObserverToModel( IObserver& Observer )
+void Calc::DoAddObserverToModel( IObserver& Observer )
 {
     geo_.AddObserver( Observer );
 }
@@ -113,7 +113,7 @@ void FixGlyph( IModel::PolygonType& Polygon )
 void Calc::DoSetText( String Val, String FontName, double FontSize,
                       double DX, double DY, bool Bold, bool Italic )
 {
-    // usando GDI+ converte il testo in primitive grafiche
+    // Usando GDI+, converte il testo in primitive grafiche
     // (poligoni/ring) e le scrive nel modello
 
     // Crea il path dal testo

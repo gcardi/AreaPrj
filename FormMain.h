@@ -16,13 +16,34 @@
 
 #include <memory>
 
-#include "Calc.h"
+#include "IController.h"
 #include "IRenderer.h"
-#include "VCLView.h"
 #include "IAreaCalculator.h"
 #include "IModel.h"
 
-class TfrmMain : public TForm
+#include "IObserver.h"
+#include "IView.h"
+
+//#include "VCLView.h"
+#include "Calc.h"
+
+/*
+class IJoke {
+public:
+    void Do() { DoDo(); }
+protected:
+    virtual void DoDo() = 0;
+};
+*/
+
+//class TFormForm : public TForm, public IJoke {
+class TFormForm : public TForm, public AreaPrj::IView, public AreaPrj::IObserver {
+public:
+    template<typename...A>
+    TFormForm( A&&... Args ) : TForm( std::forward<A>( Args )... ) {}
+};
+
+class TfrmMain : public TFormForm
 {
 __published:	// IDE-managed Components
     TPaintBox *paintboxViewport;
@@ -67,19 +88,42 @@ __published:	// IDE-managed Components
     void __fastcall FormKeyPress(TObject *Sender, System::WideChar &Key);
 
 public:		// User declarations
-    __fastcall TfrmMain(TComponent* Owner);
+    __fastcall TfrmMain(TComponent* Owner) override;
 
     // To access IView and IObserver methods use (*this)-> in place of this->
-    auto operator->() { return &gui_; }
-    auto operator->() const { return &gui_; }
+    //auto operator->() { return &gui_; }
+    //auto operator->() const { return &gui_; }
+
+    AreaPrj::IController& GetController() { return concreteCalc_; }
+    AreaPrj::IController const & GetController() const { return concreteCalc_; }
+
+protected:
+    //virtual void DoDo() override { ShowMessage( _D( "Doh doh doh dah dah dah" ) ); }
+    // IObserver
+    virtual void DoNotify() override { Render(); }
+
+    // IView
+    virtual String DoGetText() const override { return GetInputText(); }
+    virtual void DoSetText( String Val ) override { SetInputText( Val ); }
+    virtual String DoGetFontName() const override { return GetInputTextFontName(); }
+    virtual void DoSetFontName( String Val ) override { SetInputTextFontName( Val ); }
+    virtual double DoGetTextSize() const override { return GetInputTextFontSize(); }
+    virtual void DoSetTextSize( double Val ) override { SetInputTextFontSize( Val ); }
+    virtual bool DoGetBold() const override { return GetInputTextBold(); }
+    virtual void DoSetBold( bool Val ) override { SetInputTextBold( Val ); }
+    virtual bool DoGetItalic() const override { return GetInputTextItalic(); }
+    virtual void DoSetItalic( bool Val ) override { SetInputTextItalic( Val ); }
+    virtual void DoPan( int Dx, int Dy ) override { ViewportPan( Dx, Dy ); }
+    virtual AreaPrj::IModel const & DoGetModel() const override { return GetModel(); }
 
 private:	// User declarations
-    using IntfImpl = AreaPrj::VCLView<TfrmMain>;
+//    using IntfImpl = AreaPrj::VCLView<TfrmMain>;
 
-    friend IntfImpl;
+//    friend IntfImpl;
 
-    AreaPrj::Calc calc_;       // Concrete Controller
-    IntfImpl gui_{ *this };    // Concrete view (proxy)
+    AreaPrj::Calc concreteCalc_; // Concrete controller
+    //AreaPrj::Calc calc_;         // Controller
+    //IntfImpl gui_{ *this };      // Concrete view (proxy)
     std::unique_ptr<AreaPrj::IRenderer> renderer_ { MakeRender() };
     bool dataValid_{ false };
     bool dragging_ {};
@@ -103,7 +147,7 @@ private:	// User declarations
     void SetInputTextItalic( bool Val );
     void ViewportPan( int Dx, int Dy );
     bool HitTest( int X, int Y ) const;
-    AreaPrj::IModel const & GetModel() const { return calc_.GetModel(); }
+    AreaPrj::IModel const & GetModel() const { return GetController().GetModel(); }
     double GetThickness() const;
     void SetThickness( double Val );
 
