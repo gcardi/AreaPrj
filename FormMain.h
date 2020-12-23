@@ -24,23 +24,12 @@
 #include "IObserver.h"
 #include "IView.h"
 
-//#include "VCLView.h"
 #include "Calc.h"
 
-/*
-class IJoke {
-public:
-    void Do() { DoDo(); }
-protected:
-    virtual void DoDo() = 0;
-};
-*/
-
-//class TFormForm : public TForm, public IJoke {
 class TFormForm : public TForm, public AreaPrj::IView, public AreaPrj::IObserver {
 public:
-    template<typename...A>
-    TFormForm( A&&... Args ) : TForm( std::forward<A>( Args )... ) {}
+	template<typename...A>
+	TFormForm( A&&... Args ) : TForm( std::forward<A>( Args )... ) {}
 };
 
 class TfrmMain : public TFormForm
@@ -64,7 +53,7 @@ __published:	// IDE-managed Components
     TLabel *Label7;
     TCheckBox *checkboxBold;
     TCheckBox *checkboxItalic;
-    TPanel *Panel1;
+	TPanel *Panel1;
     TPanel *Panel2;
     TActionList *ActionList1;
     TAction *actArea;
@@ -90,16 +79,11 @@ __published:	// IDE-managed Components
 public:		// User declarations
     __fastcall TfrmMain(TComponent* Owner) override;
 
-    // To access IView and IObserver methods use (*this)-> in place of this->
-    //auto operator->() { return &gui_; }
-    //auto operator->() const { return &gui_; }
-
-    AreaPrj::IController& GetController() { return concreteCalc_; }
-    AreaPrj::IController const & GetController() const { return concreteCalc_; }
+	AreaPrj::IController& GetController() { return concreteCalc_; }
+	AreaPrj::IController const & GetController() const { return concreteCalc_; }
 
 protected:
-    //virtual void DoDo() override { ShowMessage( _D( "Doh doh doh dah dah dah" ) ); }
-    // IObserver
+	// IObserver
     virtual void DoNotify() override { Render(); }
 
     // IView
@@ -121,12 +105,10 @@ private:	// User declarations
 
 //    friend IntfImpl;
 
-    AreaPrj::Calc concreteCalc_; // Concrete controller
-    //AreaPrj::Calc calc_;         // Controller
-    //IntfImpl gui_{ *this };      // Concrete view (proxy)
-    std::unique_ptr<AreaPrj::IRenderer> renderer_ { MakeRender() };
-    bool dataValid_{ false };
-    bool dragging_ {};
+	AreaPrj::Calc concreteCalc_; // Concrete controller
+	std::unique_ptr<AreaPrj::IRenderer> renderer_ { MakeRender() };
+	bool dataValid_{ false };
+	bool dragging_ {};
     int startX_ {};
     int startY_ {};
     int ofsX_ {};
