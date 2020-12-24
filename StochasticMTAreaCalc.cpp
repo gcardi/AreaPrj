@@ -77,7 +77,6 @@ double StochasticMTAreaCalc::DoCompute( IModel const & Model ) const
                             ++HitCnt;
                         }
                     }
-
                     return HitCnt;
                 },
                 rd_(),

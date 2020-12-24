@@ -26,13 +26,13 @@
 
 #include "Calc.h"
 
-class TFormForm : public TForm, public AreaPrj::IView, public AreaPrj::IObserver {
+class TMIfrmMain : public TForm, public AreaPrj::IView, public AreaPrj::IObserver {
 public:
-	template<typename...A>
-	TFormForm( A&&... Args ) : TForm( std::forward<A>( Args )... ) {}
+    template<typename...A>
+    TMIfrmMain( A&&... Args ) : TForm( std::forward<A>( Args )... ) {}
 };
 
-class TfrmMain : public TFormForm
+class TfrmMain : public TMIfrmMain
 {
 __published:	// IDE-managed Components
     TPaintBox *paintboxViewport;
@@ -53,7 +53,7 @@ __published:	// IDE-managed Components
     TLabel *Label7;
     TCheckBox *checkboxBold;
     TCheckBox *checkboxItalic;
-	TPanel *Panel1;
+    TPanel *Panel1;
     TPanel *Panel2;
     TActionList *ActionList1;
     TAction *actArea;
@@ -77,18 +77,20 @@ __published:	// IDE-managed Components
     void __fastcall FormKeyPress(TObject *Sender, System::WideChar &Key);
 
 public:		// User declarations
-    __fastcall TfrmMain(TComponent* Owner) override;
+    __fastcall TfrmMain( TComponent* Owner ) override;
 
-	AreaPrj::IController& GetController() { return concreteCalc_; }
-	AreaPrj::IController const & GetController() const { return concreteCalc_; }
+    AreaPrj::IController& GetController() { return concreteCalc_; }
+    AreaPrj::IController const & GetController() const { return concreteCalc_; }
 
 protected:
-	// IObserver
+    // IObserver
     virtual void DoNotify() override { Render(); }
 
     // IView
-    virtual String DoGetText() const override { return GetInputText(); }
-    virtual void DoSetText( String Val ) override { SetInputText( Val ); }
+    virtual String DoGetText() const override;
+    virtual void DoSetText( String Val ) override;
+    //virtual String DoGetText() const override { return GetInputText(); }
+    //virtual void DoSetText( String Val ) override { SetInputText( Val ); }
     virtual String DoGetFontName() const override { return GetInputTextFontName(); }
     virtual void DoSetFontName( String Val ) override { SetInputTextFontName( Val ); }
     virtual double DoGetTextSize() const override { return GetInputTextFontSize(); }
@@ -101,14 +103,10 @@ protected:
     virtual AreaPrj::IModel const & DoGetModel() const override { return GetModel(); }
 
 private:	// User declarations
-//    using IntfImpl = AreaPrj::VCLView<TfrmMain>;
-
-//    friend IntfImpl;
-
-	AreaPrj::Calc concreteCalc_; // Concrete controller
-	std::unique_ptr<AreaPrj::IRenderer> renderer_ { MakeRender() };
-	bool dataValid_{ false };
-	bool dragging_ {};
+    AreaPrj::Calc concreteCalc_; // Concrete controller
+    std::unique_ptr<AreaPrj::IRenderer> renderer_ { MakeRender() };
+    bool dataValid_{ false };
+    bool dragging_ {};
     int startX_ {};
     int startY_ {};
     int ofsX_ {};
@@ -117,8 +115,8 @@ private:	// User declarations
     int oldOfsY_ {};
     std::unique_ptr<AreaPrj::IAreaCalculator> areaCalc_ { MakeAreaCalculator() };
 
-    String GetInputText() const;
-    void SetInputText( String Val );
+    //String GetInputText() const;
+    //void SetInputText( String Val );
     String GetInputTextFontName() const;
     void SetInputTextFontName( String Val );
     double GetInputTextFontSize() const;
@@ -142,8 +140,6 @@ private:	// User declarations
     static std::unique_ptr<TStringList> GetAreaMethodNameList();
     std::unique_ptr<AreaPrj::IAreaCalculator> MakeAreaCalculator() const;
     void CancelTextDrag();
-
-    // Usata dalla parte IView di IntfImpl
     void Render();
 };
 //---------------------------------------------------------------------------

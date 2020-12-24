@@ -51,7 +51,7 @@ void Test() {
 }
 
 __fastcall TfrmMain::TfrmMain(TComponent* Owner)
-    : TFormForm(Owner)
+    : TMIfrmMain(Owner)
 {
     pnlViewport->ControlStyle = pnlViewport->ControlStyle << csOpaque;
 
@@ -75,7 +75,7 @@ std::unique_ptr<TStringList> TfrmMain::GetAreaMethodNameList()
     auto SL = make_unique<TStringList>();
     SL->Append( PolynomialAreaCalc::GetName() );
     SL->Append( StochasticAreaCalc::GetName() );
-    if ( thread::hardware_concurrency() ) {
+    if ( thread::hardware_concurrency() > 1 ) {
         SL->Append( StochasticMTAreaCalc::GetName() );
     }
     return SL;
@@ -151,13 +151,15 @@ void __fastcall TfrmMain::paintboxViewportPaint( TObject *Sender )
 }
 //---------------------------------------------------------------------------
 
-String TfrmMain::GetInputText() const
+//String TfrmMain::GetInputText() const
+String TfrmMain::DoGetText() const
 {
     return edtText->Text;
 }
 //---------------------------------------------------------------------------
 
-void TfrmMain::SetInputText( String Val )
+//void TfrmMain::SetInputText( String Val )
+void TfrmMain::DoSetText( String Val )
 {
     if ( Val != edtText->Text ) {
         edtText->Text = Val;
@@ -212,7 +214,9 @@ void TfrmMain::UpdateModel()
     dataValid_ = TextSize < 1000.0 && TextSize > 0.0;
     if ( IsDataValid() ) {
         GetController().SetText(
-            GetInputText(), GetInputTextFontName(), TextSize, ofsX_, ofsY_,
+            //GetInputText(),
+            DoGetText(),
+            GetInputTextFontName(), TextSize, ofsX_, ofsY_,
             GetInputTextBold(), GetInputTextItalic()
         );
     }
