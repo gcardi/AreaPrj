@@ -26,6 +26,8 @@
 
 #include "Calc.h"
 
+// Classe necessari aper ingannare l'IDE di Embarcadero a cui non piace
+// la multipla ereditarietà a livello di classi derivate da TObject
 class TMIfrmMain : public TForm, public AreaPrj::IView, public AreaPrj::IObserver {
 public:
     template<typename...A>
@@ -89,18 +91,16 @@ protected:
     // IView
     virtual String DoGetText() const override;
     virtual void DoSetText( String Val ) override;
-    //virtual String DoGetText() const override { return GetInputText(); }
-    //virtual void DoSetText( String Val ) override { SetInputText( Val ); }
-    virtual String DoGetFontName() const override { return GetInputTextFontName(); }
-    virtual void DoSetFontName( String Val ) override { SetInputTextFontName( Val ); }
-    virtual double DoGetTextSize() const override { return GetInputTextFontSize(); }
-    virtual void DoSetTextSize( double Val ) override { SetInputTextFontSize( Val ); }
-    virtual bool DoGetBold() const override { return GetInputTextBold(); }
-    virtual void DoSetBold( bool Val ) override { SetInputTextBold( Val ); }
-    virtual bool DoGetItalic() const override { return GetInputTextItalic(); }
-    virtual void DoSetItalic( bool Val ) override { SetInputTextItalic( Val ); }
-    virtual void DoPan( int Dx, int Dy ) override { ViewportPan( Dx, Dy ); }
-    virtual AreaPrj::IModel const & DoGetModel() const override { return GetModel(); }
+    virtual String DoGetFontName() const override;
+    virtual void DoSetFontName( String Val ) override;
+    virtual double DoGetTextSize() const override;
+    virtual void DoSetTextSize( double Val ) override;
+    virtual bool DoGetBold() const override;
+    virtual void DoSetBold( bool Val ) override;
+    virtual bool DoGetItalic() const override;
+    virtual void DoSetItalic( bool Val ) override;
+    virtual void DoPan( int Dx, int Dy ) override;
+    virtual AreaPrj::IModel const & DoGetModel() const override;
 
 private:	// User declarations
     AreaPrj::Calc concreteCalc_; // Concrete controller
@@ -115,19 +115,8 @@ private:	// User declarations
     int oldOfsY_ {};
     std::unique_ptr<AreaPrj::IAreaCalculator> areaCalc_ { MakeAreaCalculator() };
 
-    //String GetInputText() const;
-    //void SetInputText( String Val );
-    String GetInputTextFontName() const;
-    void SetInputTextFontName( String Val );
-    double GetInputTextFontSize() const;
-    void SetInputTextFontSize( double Val );
-    bool GetInputTextBold() const;
-    void SetInputTextBold( bool Val );
-    bool GetInputTextItalic() const;
-    void SetInputTextItalic( bool Val );
-    void ViewportPan( int Dx, int Dy );
     bool HitTest( int X, int Y ) const;
-    AreaPrj::IModel const & GetModel() const { return GetController().GetModel(); }
+    //AreaPrj::IModel const & GetModel() const { return GetController().GetModel(); }
     double GetThickness() const;
     void SetThickness( double Val );
 
