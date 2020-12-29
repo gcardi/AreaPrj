@@ -44,15 +44,35 @@ using AreaPrj::StochasticMTAreaCalc;
 
 //---------------------------------------------------------------------------
 
+// Questa funzione (mai chiamata) serve a verificare che la classe TfrmMain,
+// che ha più di una base, implementi tutte le funzioni virtuali delle classi
+// da cui deriva. Alcune delle basi di TfrmMain sono classi astratte prive
+// di dati (che qui fungono da interfacce). Il meccanismo di creazione della
+// istanza assegnata al puntatore frmMain presente in Area.cpp è siffatto:
+//
+//  Application->CreateForm(__classid(TfrmMain), &frmMain);
+//
+// Putroppo questi non produce errori se i metodi puri virtuali non sono tutti
+// implementati in TfrmMain. Per ovviare a questo inconveniente si crea una
+// funzione, che non verrà mai chiamata e che quindi non consuma risorse,
+// per innescare il meccanismo di verifica intrinseco nel C++ che pretente
+// che tutte le funzioni pure virtuali ereditate da una classe concreta siano
+// implementate.
+namespace ValidCtrl {
+void Test() {
+    new ::TfrmMain( nullptr );
+}
+}
+
 __fastcall TfrmMain::TfrmMain(TComponent* Owner)
-    : TForm(Owner)
+    : TMIfrmMain(Owner)
 {
     pnlViewport->ControlStyle = pnlViewport->ControlStyle << csOpaque;
 
     comboboxFontName->Items->Assign( RetrieveFontList().get() );
     comboboxFontName->ItemIndex =
         max( comboboxFontName->Items->IndexOf( Font->Name ), 0 );
-    calc_.AddObserverToModel( gui_ );
+    GetController().AddObserverToModel( *this );
 
     comboboxAreaMethod->Items->Assign( GetAreaMethodNameList().get() );
     comboboxAreaMethod->ItemIndex = 0;
@@ -69,7 +89,7 @@ std::unique_ptr<TStringList> TfrmMain::GetAreaMethodNameList()
     auto SL = make_unique<TStringList>();
     SL->Append( PolynomialAreaCalc::GetName() );
     SL->Append( StochasticAreaCalc::GetName() );
-    if ( thread::hardware_concurrency() ) {
+    if ( thread::hardware_concurrency() > 1 ) {
         SL->Append( StochasticMTAreaCalc::GetName() );
     }
     return SL;
@@ -121,7 +141,6 @@ void TfrmMain::InvalidateViewport()
 
 void TfrmMain::Render()
 {
-    //auto& Model = calc_.GetModel();
     renderer_->PrepareRendering( GetModel() );
     InvalidateViewport();
 }
@@ -145,13 +164,13 @@ void __fastcall TfrmMain::paintboxViewportPaint( TObject *Sender )
 }
 //---------------------------------------------------------------------------
 
-String TfrmMain::GetInputText() const
+String TfrmMain::DoGetText() const
 {
     return edtText->Text;
 }
 //---------------------------------------------------------------------------
 
-void TfrmMain::SetInputText( String Val )
+void TfrmMain::DoSetText( String Val )
 {
     if ( Val != edtText->Text ) {
         edtText->Text = Val;
@@ -160,13 +179,13 @@ void TfrmMain::SetInputText( String Val )
 }
 //---------------------------------------------------------------------------
 
-String TfrmMain::GetInputTextFontName() const
+String TfrmMain::DoGetFontName() const
 {
     return comboboxFontName->Text;
 }
 //---------------------------------------------------------------------------
 
-void TfrmMain::SetInputTextFontName( String Val )
+void TfrmMain::DoSetFontName( String Val )
 {
     if ( Val != comboboxFontName->Text ) {
         comboboxFontName->Text = Val;
@@ -175,13 +194,13 @@ void TfrmMain::SetInputTextFontName( String Val )
 }
 //---------------------------------------------------------------------------
 
-double TfrmMain::GetInputTextFontSize() const
+double TfrmMain::DoGetTextSize() const
 {
     return edtTextSize->Text.ToDouble();
 }
 //---------------------------------------------------------------------------
 
-void TfrmMain::SetInputTextFontSize( double Val )
+void TfrmMain::DoSetTextSize( double Val )
 {
     if ( edtTextSize->Text.ToDouble() != Val ) {
         edtTextSize->Text =
@@ -205,9 +224,9 @@ void TfrmMain::UpdateModel()
     auto TextSize = StrToFloatDef( edtTextSize->Text, -1.0 );
     dataValid_ = TextSize < 1000.0 && TextSize > 0.0;
     if ( IsDataValid() ) {
-        calc_.SetText(
-            GetInputText(), GetInputTextFontName(), TextSize, ofsX_, ofsY_,
-            GetInputTextBold(), GetInputTextItalic()
+        GetController().SetText(
+            IView::GetText(), // Iview:: per togliere l'ambiguità con Vcl::Controls::TControl
+            GetFontName(), TextSize, ofsX_, ofsY_, GetBold(), GetItalic()
         );
     }
     else {
@@ -290,13 +309,13 @@ void __fastcall TfrmMain::comboboxRendererChange(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-bool TfrmMain::GetInputTextBold() const
+bool TfrmMain::DoGetBold() const
 {
     return checkboxBold->Checked;
 }
 //---------------------------------------------------------------------------
 
-void TfrmMain::SetInputTextBold( bool Val )
+void TfrmMain::DoSetBold( bool Val )
 {
     if ( checkboxBold->Checked != Val ) {
         checkboxBold->Checked = Val;
@@ -305,13 +324,13 @@ void TfrmMain::SetInputTextBold( bool Val )
 }
 //---------------------------------------------------------------------------
 
-bool TfrmMain::GetInputTextItalic() const
+bool TfrmMain::DoGetItalic() const
 {
     return checkboxItalic->Checked;
 }
 //---------------------------------------------------------------------------
 
-void TfrmMain::SetInputTextItalic( bool Val )
+void TfrmMain::DoSetItalic( bool Val )
 {
     if ( checkboxItalic->Checked != Val ) {
         checkboxItalic->Checked = Val;
@@ -373,13 +392,19 @@ void __fastcall TfrmMain::FormKeyPress(TObject *Sender, System::WideChar &Key)
 }
 //---------------------------------------------------------------------------
 
-void TfrmMain::ViewportPan( int Dx, int Dy )
+void TfrmMain::DoPan( int Dx, int Dy )
 {
     if ( !dragging_ ) {
         ofsX_ += Dx;
         ofsY_ += Dy;
         UpdateModel();
     }
+}
+//---------------------------------------------------------------------------
+
+AreaPrj::IModel const & TfrmMain::DoGetModel() const
+{
+    return GetController().GetModel();
 }
 //---------------------------------------------------------------------------
 

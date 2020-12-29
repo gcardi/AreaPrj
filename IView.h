@@ -9,8 +9,8 @@ class IModel;
 
 class IView {
 public:
-    String GetText() const { return GetText(); }
-    void SetText( String Val ) { SetText( Val ); }
+    String GetText() const { return DoGetText(); }
+    void SetText( String Val ) { DoSetText( Val ); }
     String GetFontName() const { return DoGetFontName(); }
     void SetFontName( String Val ) { DoSetFontName( Val ); }
     double GetTextSize() const { return DoGetTextSize(); }

@@ -16,13 +16,25 @@
 
 #include <memory>
 
-#include "Calc.h"
+#include "IController.h"
 #include "IRenderer.h"
-#include "VCLView.h"
 #include "IAreaCalculator.h"
 #include "IModel.h"
 
-class TfrmMain : public TForm
+#include "IObserver.h"
+#include "IView.h"
+
+#include "Calc.h"
+
+// Classe necessari aper ingannare l'IDE di Embarcadero a cui non piace
+// la multipla ereditarietà a livello di classi derivate da TObject
+class TMIfrmMain : public TForm, public AreaPrj::IView, public AreaPrj::IObserver {
+public:
+    template<typename...A>
+    TMIfrmMain( A&&... Args ) : TForm( std::forward<A>( Args )... ) {}
+};
+
+class TfrmMain : public TMIfrmMain
 {
 __published:	// IDE-managed Components
     TPaintBox *paintboxViewport;
@@ -67,19 +79,31 @@ __published:	// IDE-managed Components
     void __fastcall FormKeyPress(TObject *Sender, System::WideChar &Key);
 
 public:		// User declarations
-    __fastcall TfrmMain(TComponent* Owner);
+    __fastcall TfrmMain( TComponent* Owner ) override;
 
-    // To access IView and IObserver methods use (*this)-> in place of this->
-    auto operator->() { return &gui_; }
-    auto operator->() const { return &gui_; }
+    AreaPrj::IController& GetController() { return concreteCalc_; }
+    AreaPrj::IController const & GetController() const { return concreteCalc_; }
+
+protected:
+    // IObserver
+    virtual void DoNotify() override { Render(); }
+
+    // IView
+    virtual String DoGetText() const override;
+    virtual void DoSetText( String Val ) override;
+    virtual String DoGetFontName() const override;
+    virtual void DoSetFontName( String Val ) override;
+    virtual double DoGetTextSize() const override;
+    virtual void DoSetTextSize( double Val ) override;
+    virtual bool DoGetBold() const override;
+    virtual void DoSetBold( bool Val ) override;
+    virtual bool DoGetItalic() const override;
+    virtual void DoSetItalic( bool Val ) override;
+    virtual void DoPan( int Dx, int Dy ) override;
+    virtual AreaPrj::IModel const & DoGetModel() const override;
 
 private:	// User declarations
-    using IntfImpl = AreaPrj::VCLView<TfrmMain>;
-
-    friend IntfImpl;
-
-    AreaPrj::Calc calc_;       // Concrete Controller
-    IntfImpl gui_{ *this };    // Concrete view (proxy)
+    AreaPrj::Calc concreteCalc_; // Concrete controller
     std::unique_ptr<AreaPrj::IRenderer> renderer_ { MakeRender() };
     bool dataValid_{ false };
     bool dragging_ {};
@@ -91,19 +115,8 @@ private:	// User declarations
     int oldOfsY_ {};
     std::unique_ptr<AreaPrj::IAreaCalculator> areaCalc_ { MakeAreaCalculator() };
 
-    String GetInputText() const;
-    void SetInputText( String Val );
-    String GetInputTextFontName() const;
-    void SetInputTextFontName( String Val );
-    double GetInputTextFontSize() const;
-    void SetInputTextFontSize( double Val );
-    bool GetInputTextBold() const;
-    void SetInputTextBold( bool Val );
-    bool GetInputTextItalic() const;
-    void SetInputTextItalic( bool Val );
-    void ViewportPan( int Dx, int Dy );
     bool HitTest( int X, int Y ) const;
-    AreaPrj::IModel const & GetModel() const { return calc_.GetModel(); }
+    //AreaPrj::IModel const & GetModel() const { return GetController().GetModel(); }
     double GetThickness() const;
     void SetThickness( double Val );
 
@@ -116,8 +129,6 @@ private:	// User declarations
     static std::unique_ptr<TStringList> GetAreaMethodNameList();
     std::unique_ptr<AreaPrj::IAreaCalculator> MakeAreaCalculator() const;
     void CancelTextDrag();
-
-    // Usata dalla parte IView di IntfImpl
     void Render();
 };
 //---------------------------------------------------------------------------
