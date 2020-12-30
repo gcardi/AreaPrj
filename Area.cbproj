@@ -6,11 +6,7 @@
         <AppType>Application</AppType>
         <MainSource>Area.cpp</MainSource>
         <Base>True</Base>
-<<<<<<< HEAD
-        <Config Condition="'$(Config)'==''">Release</Config>
-=======
         <Config Condition="'$(Config)'==''">Debug</Config>
->>>>>>> 4acd2a2910575221988e75788833d9dc50e05e76
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>3</TargetedPlatforms>
     </PropertyGroup>
@@ -273,16 +269,10 @@
                     <VFOLDER ID="{5CD95D60-1096-4838-9D34-EEC4AF746E03}" name="Misc"/>
                 </VFOLDERS>
                 <Excluded_Packages>
-<<<<<<< HEAD
                     <Excluded_Packages Name="$(BDSBIN)\bcboffice2k270.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcbofficexp270.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-=======
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\bpl\LockBox3FMXCD260.bpl">TurboPack LockBox 3 CBuilder FMX designtime package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k260.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp260.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
->>>>>>> 4acd2a2910575221988e75788833d9dc50e05e76
                 </Excluded_Packages>
             </CPlusPlusBuilder.Personality>
             <Deployment Version="3">
