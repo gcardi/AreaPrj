@@ -29,7 +29,7 @@ namespace AreaPrj {
 String StochasticAreaCalc::DoGetDescription() const
 {
     return Format(
-        _T( "\'%s\' con %.0n di punti casuali" ),
+        _D( "\'%s\' con %.0n di punti casuali" ),
         ARRAYOFCONST((
             GetName(),
             static_cast<long double>( pointCount_ )

@@ -44,6 +44,7 @@ object frmMain: TfrmMain
       Cursor = crCross
       Align = alClient
       OnMouseDown = paintboxViewportMouseDown
+      OnMouseLeave = paintboxViewportMouseLeave
       OnMouseMove = paintboxViewportMouseMove
       OnMouseUp = paintboxViewportMouseUp
       OnPaint = paintboxViewportPaint
@@ -120,6 +121,27 @@ object frmMain: TfrmMain
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+    end
+    object lblCoords: TLabel
+      Left = 9
+      Top = 178
+      Width = 3
+      Height = 13
+      Anchors = [akLeft, akBottom]
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblBoundingBox: TLabel
+      Left = 507
+      Top = 11
+      Width = 3
+      Height = 13
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
     end
   end
   object Panel1: TPanel

@@ -238,19 +238,19 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
                                 }
                                 else {
                                     throw Exception(
-                                        _T( "inner ring not properly closed" )
+                                        _D( "inner ring not properly closed" )
                                     );
                                 }
                             }
                             else {
                                 throw Exception(
-                                    _T( "'line' expected: inner ring not closed" )
+                                    _D( "'line' expected: inner ring not closed" )
                                 );
                             }
                         }
                         else {
                             throw Exception(
-                                _T( "Starting 'move' expected for inner ring" )
+                                _D( "Starting 'move' expected for inner ring" )
                             );
                         }
                     }
@@ -264,18 +264,18 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
                     // goto O1
                 }
                 else {
-                    throw Exception( _T( "outer ring not properly closed" ) );
+                    throw Exception( _D( "outer ring not properly closed" ) );
                 }
             }
             else {
                 throw Exception(
-                    _T( "'line' expected: outer ring not closed" )
+                    _D( "'line' expected: outer ring not closed" )
                 );
             }
         }
 		else
 		{
-			throw Exception( _T( "Starting 'move' expected for outer ring" ) );
+			throw Exception( _D( "Starting 'move' expected for outer ring" ) );
 		}
 		Adv( ti, pi );
 	}

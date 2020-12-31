@@ -38,7 +38,7 @@ namespace AreaPrj {
 String StochasticMTAreaCalc::DoGetDescription() const
 {
     return Format(
-        _T( "\'%s\' con %.0n di punti casuali suddiviso in %u task" ),
+        _D( "\'%s\' con %.0n di punti casuali suddiviso in %u task" ),
         ARRAYOFCONST((
             GetName(),
             static_cast<long double>( pointCount_ ),

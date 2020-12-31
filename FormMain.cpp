@@ -10,6 +10,9 @@
 #include <vector>
 #include <thread>
 
+#include <boost/geometry.hpp>
+//#include <boost/geometry/geometries/geometries.hpp>
+
 #include "GDIRenderer.h"
 #include "GDIPlusRenderer.h"
 #include "Utils.h"
@@ -41,6 +44,9 @@ using AreaPrj::GDIPlusRenderer;
 using AreaPrj::PolynomialAreaCalc;
 using AreaPrj::StochasticAreaCalc;
 using AreaPrj::StochasticMTAreaCalc;
+
+using boost::geometry::envelope;
+using boost::geometry::model::box;
 
 //---------------------------------------------------------------------------
 
@@ -150,12 +156,12 @@ void __fastcall TfrmMain::paintboxViewportPaint( TObject *Sender )
 {
     auto& PaintBox = static_cast<TPaintBox&>( *Sender );
     auto& PBCanvas = *PaintBox.Canvas;
-    if ( IsDataValid() ) {
+    if ( IsInputDataValid() ) {
         renderer_->Render( PBCanvas );
     }
     else {
         auto Rect = PaintBox.ClientRect;
-        String Txt = _T( "Invalid" );
+        String Txt = _D( "Invalid" );
         auto TextFmt =
             TTextFormat() << tfVerticalCenter << tfCenter << tfSingleLine;
         PBCanvas.Font->Size = 48;
@@ -204,10 +210,7 @@ void TfrmMain::DoSetTextSize( double Val )
 {
     if ( edtTextSize->Text.ToDouble() != Val ) {
         edtTextSize->Text =
-            Format(
-                _T( "%g" ),
-                ARRAYOFCONST(( static_cast<long double>( Val ) ))
-            );
+            Format( _D( "%g" ), ARRAYOFCONST(( static_cast<long double>( Val ) )) );
         UpdateModel();
     }
 }
@@ -219,18 +222,22 @@ void __fastcall TfrmMain::TextChanged(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+
 void TfrmMain::UpdateModel()
 {
     auto TextSize = StrToFloatDef( edtTextSize->Text, -1.0 );
-    dataValid_ = TextSize < 1000.0 && TextSize > 0.0;
-    if ( IsDataValid() ) {
+    // Validate Input Data
+    inputDataValid_ = TextSize < 1000.0 && TextSize > 0.0;
+    if ( IsInputDataValid() ) {
         GetController().SetText(
             IView::GetText(), // Iview:: per togliere l'ambiguità con Vcl::Controls::TControl
             GetFontName(), TextSize, ofsX_, ofsY_, GetBold(), GetItalic()
         );
+        UpdateBoundingBoxValues();
     }
     else {
         InvalidateViewport();
+        ClearBoundingBoxValues();
     }
 }
 //---------------------------------------------------------------------------
@@ -258,14 +265,12 @@ void __fastcall TfrmMain::paintboxViewportMouseDown(TObject *Sender, TMouseButto
           TShiftState Shift, int X, int Y)
 {
     dragging_ = false;
-    if ( IsDataValid() ) {
-        if ( HitTest( X, Y ) ) {
-            oldOfsX_ = ofsX_;
-            oldOfsY_ = ofsY_;
-            startX_ = X - ofsX_;
-            startY_ = Y - ofsY_;
-            dragging_ = true;
-        }
+    if ( IsInputDataValid() && HitTest( X, Y ) ) {
+        oldOfsX_ = ofsX_;
+        oldOfsY_ = ofsY_;
+        startX_ = X - ofsX_;
+        startY_ = Y - ofsY_;
+        dragging_ = true;
     }
 }
 //---------------------------------------------------------------------------
@@ -283,7 +288,11 @@ void __fastcall TfrmMain::paintboxViewportMouseMove(TObject *Sender, TShiftState
     }
 
     lblHitTest->Caption =
-        IsDataValid() ? HitTest( X, Y ) ? _T( "in" ) : _T( "out" ) : _T( "-" );
+        IsInputDataValid() ? HitTest( X, Y ) ?
+          _D( "in" )
+        :
+          _D( "out" ) : _D( "-" );
+    lblCoords->Caption = Format( _D( "(%d,%d)" ), X, Y );
 }
 //---------------------------------------------------------------------------
 
@@ -344,7 +353,7 @@ void __fastcall TfrmMain::actAreaExecute(TObject *Sender)
     TCursorManager CursorManager;
     ShowMessage(
         Format(
-            _T( "L'area calcolata con il metodo %s è %f u²"  ),
+            _D( "L'area calcolata con il metodo %s è %f u²"  ),
             ARRAYOFCONST((
                 areaCalc_->GetDescription(),
                 static_cast<long double>(
@@ -359,7 +368,7 @@ void __fastcall TfrmMain::actAreaExecute(TObject *Sender)
 void __fastcall TfrmMain::actAreaUpdate(TObject *Sender)
 {
     auto& Act = static_cast<TAction&>( *Sender );
-    Act.Enabled = areaCalc_ && IsDataValid();
+    Act.Enabled = areaCalc_ && IsInputDataValid();
 }
 //---------------------------------------------------------------------------
 
@@ -405,6 +414,36 @@ void TfrmMain::DoPan( int Dx, int Dy )
 AreaPrj::IModel const & TfrmMain::DoGetModel() const
 {
     return GetController().GetModel();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmMain::paintboxViewportMouseLeave(TObject *Sender)
+{
+    lblCoords->Caption = {};
+}
+//---------------------------------------------------------------------------
+
+void TfrmMain::UpdateBoundingBoxValues()
+{
+    if ( !IView::GetText().IsEmpty() ) {
+        box<AreaPrj::IModel::PointType> BoundingBox;
+        envelope( GetModel().GetPolygons(), BoundingBox );
+        lblBoundingBox->Caption =
+            Format(
+                _D( "(%.1f,%.1f)" ),
+                BoundingBox.max_corner().x() - BoundingBox.min_corner().x(),
+                BoundingBox.max_corner().y() - BoundingBox.min_corner().y()
+            );
+    }
+    else {
+        ClearBoundingBoxValues();
+    }
+}
+//---------------------------------------------------------------------------
+
+void TfrmMain::ClearBoundingBoxValues()
+{
+    lblBoundingBox->Caption = {};
 }
 //---------------------------------------------------------------------------
 

@@ -62,6 +62,8 @@ __published:	// IDE-managed Components
     TButton *Button1;
     TComboBox *comboboxAreaMethod;
     TLabel *Label2;
+    TLabel *lblCoords;
+    TLabel *lblBoundingBox;
     void __fastcall paintboxViewportPaint(TObject *Sender);
     void __fastcall TextChanged(TObject *Sender);
     void __fastcall edtTextSizeKeyPress(TObject *Sender, System::WideChar &Key);
@@ -77,6 +79,7 @@ __published:	// IDE-managed Components
     void __fastcall actAreaUpdate(TObject *Sender);
     void __fastcall comboboxAreaMethodChange(TObject *Sender);
     void __fastcall FormKeyPress(TObject *Sender, System::WideChar &Key);
+    void __fastcall paintboxViewportMouseLeave(TObject *Sender);
 
 public:		// User declarations
     __fastcall TfrmMain( TComponent* Owner ) override;
@@ -105,7 +108,7 @@ protected:
 private:	// User declarations
     AreaPrj::Calc concreteCalc_; // Concrete controller
     std::unique_ptr<AreaPrj::IRenderer> renderer_ { MakeRender() };
-    bool dataValid_{ false };
+    bool inputDataValid_{ false };
     bool dragging_ {};
     int startX_ {};
     int startY_ {};
@@ -122,7 +125,7 @@ private:	// User declarations
 
     void ShowArea( double Val );
     void UpdateModel();
-    bool IsDataValid() const { return dataValid_; }
+    bool IsInputDataValid() const { return inputDataValid_; }
     static std::unique_ptr<TStringList> GetRendererNameList();
     std::unique_ptr<AreaPrj::IRenderer> MakeRender() const;
     void InvalidateViewport();
@@ -130,6 +133,8 @@ private:	// User declarations
     std::unique_ptr<AreaPrj::IAreaCalculator> MakeAreaCalculator() const;
     void CancelTextDrag();
     void Render();
+    void UpdateBoundingBoxValues();
+    void ClearBoundingBoxValues();
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfrmMain *frmMain;

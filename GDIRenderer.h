@@ -13,7 +13,7 @@ namespace AreaPrj {
 
 class GDIRenderer : public IRenderer {
 public:
-    static constexpr LPCTSTR GetDescription() { return _T( "GDI" ); }
+    static constexpr LPCTSTR GetDescription() { return _D( "GDI" ); }
 protected:
     virtual String DoGetName() const override { return GetDescription(); }
     virtual void DoPrepareRendering( IModel const & Model ) override;

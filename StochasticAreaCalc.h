@@ -13,7 +13,7 @@ namespace AreaPrj {
 class StochasticAreaCalc : public IAreaCalculator {
 public:
     StochasticAreaCalc( size_t PointCount ) : pointCount_{ PointCount } {}
-    static constexpr LPCTSTR GetName() { return _T( "stocastico" ); }
+    static constexpr LPCTSTR GetName() { return _D( "stocastico" ); }
 protected:
     virtual double DoCompute( IModel const & Model ) const override;
     virtual String DoGetDescription() const override;
