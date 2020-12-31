@@ -292,7 +292,7 @@ void __fastcall TfrmMain::paintboxViewportMouseMove(TObject *Sender, TShiftState
           _D( "in" )
         :
           _D( "out" ) : _D( "-" );
-    lblCoords->Caption = Format( _D( "(%d,%d)" ), X, Y );
+    lblCoords->Caption = Format( _D( "(%d,%d)" ), ARRAYOFCONST(( X, Y )) );
 }
 //---------------------------------------------------------------------------
 
@@ -431,8 +431,10 @@ void TfrmMain::UpdateBoundingBoxValues()
         lblBoundingBox->Caption =
             Format(
                 _D( "(%.1f,%.1f)" ),
-                BoundingBox.max_corner().x() - BoundingBox.min_corner().x(),
-                BoundingBox.max_corner().y() - BoundingBox.min_corner().y()
+                ARRAYOFCONST((
+                    BoundingBox.max_corner().x() - BoundingBox.min_corner().x(),
+                    BoundingBox.max_corner().y() - BoundingBox.min_corner().y()
+                ))
             );
     }
     else {
