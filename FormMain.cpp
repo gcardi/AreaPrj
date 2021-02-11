@@ -230,7 +230,7 @@ void TfrmMain::UpdateModel()
     inputDataValid_ = TextSize < 1000.0 && TextSize > 0.0;
     if ( IsInputDataValid() ) {
         GetController().SetText(
-            IView::GetText(), // Iview:: per togliere l'ambiguità con Vcl::Controls::TControl
+            IView::GetText(), // Iview:: per risolvere l'ambiguità con Vcl::Controls::TControl
             GetFontName(), TextSize, ofsX_, ofsY_, GetBold(), GetItalic()
         );
         UpdateBoundingBoxValues();
@@ -288,10 +288,12 @@ void __fastcall TfrmMain::paintboxViewportMouseMove(TObject *Sender, TShiftState
     }
 
     lblHitTest->Caption =
-        IsInputDataValid() ? HitTest( X, Y ) ?
-          _D( "in" )
-        :
-          _D( "out" ) : _D( "-" );
+        IsInputDataValid() ?
+          HitTest( X, Y ) ?
+            _D( "in" )
+          :
+            _D( "out" )
+        : _D( "-" );
     lblCoords->Caption = Format( _D( "(%d,%d)" ), ARRAYOFCONST(( X, Y )) );
 }
 //---------------------------------------------------------------------------

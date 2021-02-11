@@ -3,6 +3,7 @@
 #ifndef CursorH
 #define CursorH
 
+/*! RAII class to manage screen cursor lifetime */
 class TCursorManager
 {
 public:
