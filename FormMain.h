@@ -26,7 +26,7 @@
 
 #include "Calc.h"
 
-// Classe necessari aper ingannare l'IDE di Embarcadero a cui non piace
+// Classe necessaria per ingannare l'IDE di Embarcadero a cui non piace
 // la multipla ereditarietà a livello di classi derivate da TObject
 class TMIfrmMain : public TForm, public AreaPrj::IView, public AreaPrj::IObserver {
 public:

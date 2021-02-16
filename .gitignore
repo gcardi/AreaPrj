@@ -4,8 +4,8 @@ __recovery/
 Docs/
 Win32/
 Win64/
-html/
-latex/
+Doxygen/html/
+Doxygen/latex/
 *.bak
 *.dcp
 *.dcu
