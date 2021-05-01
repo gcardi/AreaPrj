@@ -19,7 +19,6 @@
 #include "StochasticMTAreaCalc.h"
 
 using std::mt19937;
-using std::uniform_real_distribution;
 using std::accumulate;
 using std::begin;
 using std::end;
@@ -41,7 +40,7 @@ String StochasticMTAreaCalc::DoGetDescription() const
         _D( "\'%s\' con %.0n di punti casuali suddiviso in %u task" ),
         ARRAYOFCONST((
             GetName(),
-            static_cast<long double>( pointCount_ ),
+            static_cast<long double>( GetPointCount() ),
             taskCount_
         ))
     );
@@ -58,29 +57,10 @@ double StochasticMTAreaCalc::DoCompute( IModel const & Model ) const
             std::async(
                 std::launch::async,
                 [&]( std::random_device::result_type seed, size_t PtCnt ) -> size_t {
-                    auto const & Polygons = Model.GetPolygons();
-                    mt19937 Generator( seed );
-                    uniform_real_distribution<> DisX(
-                        BoundingBox.min_corner().x(),
-                        BoundingBox.max_corner().x()
-                    );
-
-                    uniform_real_distribution<> DisY(
-                        BoundingBox.min_corner().y(),
-                        BoundingBox.max_corner().y()
-                    );
-
-                    size_t HitCnt {};
-
-                    for ( size_t n = 0 ; n < PtCnt ; ++n ) {
-                        if ( Model.HitTest( DisX( Generator ), DisY( Generator ) ) ) {
-                            ++HitCnt;
-                        }
-                    }
-                    return HitCnt;
+                    return HitTest( Model, BoundingBox, PtCnt, seed );
                 },
                 rd_(),
-                pointCount_ / taskCount_
+                GetPointCount() / taskCount_
             )
         );
     }
@@ -93,7 +73,7 @@ double StochasticMTAreaCalc::DoCompute( IModel const & Model ) const
                 }
             )
         ) /
-        pointCount_ * area( BoundingBox );
+        GetPointCount() * area( BoundingBox );
 }
 
 } // End of namespace AreaPrj

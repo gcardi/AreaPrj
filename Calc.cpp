@@ -168,6 +168,43 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
     auto pi = begin( Pts );
     auto pe = end( Pts );
 
+    /*
+        // Dot language (for graphviz)
+        //
+        // Use http://magjac.com/graphviz-visual-editor/ to see the graph
+        // (paste following code to the left pane)
+
+        digraph finite_state_machine {
+            rankdir=LR;
+            size="8,5"
+            node [shape = none]; START;
+            node [shape = doublecircle]; EXIT;
+            node [shape = circle];
+            // MV = IsMove( ti, te )
+            // LN = IsLine( ti, te )
+            // CL = IsClosed( ti, te )
+            // MK = IsMarker( ti, te )
+            START -> O1
+            O1 -> EXIT [label = "EOF"];
+            O1 -> O2 [label = "MV (A)"];
+            O1 -> EXIT [label = "!MV (E1)"];
+            O2 -> O3 [label = "LN (B)"];
+            O2 -> EXIT [label = "!LN (E2)"];
+            O3 -> O3 [label = "|1| LN (B)"];
+            O3 -> I1 [label = "|2| CL (B)"];
+            O3 -> O1 [label = "MK (C)"];
+            O3 -> EXIT [label = "!MK (E3)"];
+            I1 -> I2 [label = "MV (D)"];
+            I1 -> EXIT [label = "!MV (E4)"];
+            I2 -> I3 [label = "LN (F)"];
+            I2 -> EXIT [label = "!LN (E5)"];
+            I3 -> I3 [label = "LN (F)"];
+            I3 -> I1 [label = "CL (F)"];
+            I3 -> O1 [label = "MK (G)"];
+            I3 -> EXIT [label = "!MK (E6)"];
+        }
+    */
+
     for ( ; pi != pe ; ) {
         // O1
         if ( IsMove( ti, te ) ) {
@@ -237,18 +274,21 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
                                     break;
                                 }
                                 else {
+                                    // E6
                                     throw Exception(
                                         _D( "inner ring not properly closed" )
                                     );
                                 }
                             }
                             else {
+                                // E5
                                 throw Exception(
                                     _D( "'line' expected: inner ring not closed" )
                                 );
                             }
                         }
                         else {
+                            // E4
                             throw Exception(
                                 _D( "Starting 'move' expected for inner ring" )
                             );
@@ -264,10 +304,12 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
                     // goto O1
                 }
                 else {
+                    // E3
                     throw Exception( _D( "outer ring not properly closed" ) );
                 }
             }
             else {
+                // E2
                 throw Exception(
                     _D( "'line' expected: outer ring not closed" )
                 );
@@ -275,6 +317,7 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
         }
 		else
 		{
+            // (E1)
 			throw Exception( _D( "Starting 'move' expected for outer ring" ) );
 		}
 		Adv( ti, pi );

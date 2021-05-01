@@ -11,6 +11,7 @@
 #include <Vcl.Themes.hpp>
 USEFORM("FormMain.cpp", frmMain);
 //---------------------------------------------------------------------------
+
 class GdiPlusSessionManager {
 public:
     GdiPlusSessionManager() {

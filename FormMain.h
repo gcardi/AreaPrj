@@ -119,7 +119,6 @@ private:	// User declarations
     std::unique_ptr<AreaPrj::IAreaCalculator> areaCalc_ { MakeAreaCalculator() };
 
     bool HitTest( int X, int Y ) const;
-    //AreaPrj::IModel const & GetModel() const { return GetController().GetModel(); }
     double GetThickness() const;
     void SetThickness( double Val );
 

@@ -13,7 +13,6 @@
 #include "StochasticAreaCalc.h"
 
 using std::mt19937;
-using std::uniform_real_distribution;
 
 using boost::geometry::envelope;
 
@@ -48,25 +47,9 @@ double StochasticAreaCalc::DoCompute( IModel const & Model ) const
 
     envelope( Polygons, BoundingBox );
 
-    uniform_real_distribution<> DisX(
-        BoundingBox.min_corner().x(),
-        BoundingBox.max_corner().x()
-    );
-
-    uniform_real_distribution<> DisY(
-        BoundingBox.min_corner().y(),
-        BoundingBox.max_corner().y()
-    );
-
-    size_t HitCnt {};
-
-    for ( size_t n = 0 ; n < pointCount_ ; ++n ) {
-        if ( Model.HitTest( DisX( Generator ), DisY( Generator ) ) ) {
-            ++HitCnt;
-        }
-    }
-
-    return static_cast<double>( HitCnt ) / pointCount_ * area( BoundingBox );
+    return
+        static_cast<double>( HitTest( Model, BoundingBox, pointCount_, rd_() ) ) /
+        pointCount_ * area( BoundingBox );
 }
 
 } // End of namespace AreaPrj

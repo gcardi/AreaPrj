@@ -95,9 +95,13 @@ std::unique_ptr<TStringList> TfrmMain::GetAreaMethodNameList()
     auto SL = make_unique<TStringList>();
     SL->Append( PolynomialAreaCalc::GetName() );
     SL->Append( StochasticAreaCalc::GetName() );
+
+    // Se la CPU ha più di un thread hardware allora vale la pena
+    // di aggiungere anche il calcolatore stochastico multi-thread
     if ( thread::hardware_concurrency() > 1 ) {
         SL->Append( StochasticMTAreaCalc::GetName() );
     }
+
     return SL;
 }
 //---------------------------------------------------------------------------
@@ -105,12 +109,13 @@ std::unique_ptr<TStringList> TfrmMain::GetAreaMethodNameList()
 // Factory method
 std::unique_ptr<AreaPrj::IAreaCalculator> TfrmMain::MakeAreaCalculator() const
 {
+    constexpr size_t StochsticPtCount = 1000000;
     switch ( comboboxAreaMethod->ItemIndex ) {
         case 1:
-            return make_unique<StochasticAreaCalc>( 1000000 );
+            return make_unique<StochasticAreaCalc>( StochsticPtCount );
         case 2:
             return make_unique<StochasticMTAreaCalc>(
-                1000000, thread::hardware_concurrency()
+                StochsticPtCount, thread::hardware_concurrency()
             );
         default:
             return make_unique<PolynomialAreaCalc>();
@@ -294,7 +299,7 @@ void __fastcall TfrmMain::paintboxViewportMouseMove(TObject *Sender, TShiftState
           :
             _D( "out" )
         : _D( "-" );
-    lblCoords->Caption = Format( _D( "(%d,%d)" ), ARRAYOFCONST(( X, Y )) );
+    lblCoords->Caption = Format( _D( "(%d,%d)" ), X, Y );
 }
 //---------------------------------------------------------------------------
 
@@ -432,7 +437,7 @@ void TfrmMain::UpdateBoundingBoxValues()
         envelope( GetModel().GetPolygons(), BoundingBox );
         lblBoundingBox->Caption =
             Format(
-                _D( "(%.1f,%.1f)" ),
+                _D( "BB - W:%.1f H:%.1f" ),
                 ARRAYOFCONST((
                     BoundingBox.max_corner().x() - BoundingBox.min_corner().x(),
                     BoundingBox.max_corner().y() - BoundingBox.min_corner().y()
