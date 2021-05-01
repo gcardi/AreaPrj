@@ -198,8 +198,8 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
             I1 -> EXIT [label = "!MV (E4)"];
             I2 -> I3 [label = "LN (F)"];
             I2 -> EXIT [label = "!LN (E5)"];
-            I3 -> I3 [label = "LN (F)"];
-            I3 -> I1 [label = "CL (F)"];
+            I3 -> I3 [label = "|1| LN (F)"];
+            I3 -> I1 [label = "|2| CL (F)"];
             I3 -> O1 [label = "MK (G)"];
             I3 -> EXIT [label = "!MK (E6)"];
         }
