@@ -48,10 +48,7 @@ object frmMain: TfrmMain
       OnMouseMove = paintboxViewportMouseMove
       OnMouseUp = paintboxViewportMouseUp
       OnPaint = paintboxViewportPaint
-      ExplicitLeft = 80
-      ExplicitTop = -64
-      ExplicitWidth = 105
-      ExplicitHeight = 105
+      ExplicitTop = 0
     end
     object lblHitTest: TLabel
       Left = 489
