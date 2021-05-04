@@ -299,7 +299,12 @@ void __fastcall TfrmMain::paintboxViewportMouseMove(TObject *Sender, TShiftState
           :
             _D( "out" )
         : _D( "-" );
-    lblCoords->Caption = Format( _D( "(%d,%d)" ), X, Y );
+    lblCoords->Caption =
+    #if ( __CODEGEARC__ >= 0x0750 )
+        Format( _D( "(%d,%d)" ), X, Y );
+    #else
+        Format( _D( "(%d,%d)" ), ARRAYOFCONST(( X, Y )) );
+    #endif
 }
 //---------------------------------------------------------------------------
 
