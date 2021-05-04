@@ -293,16 +293,18 @@ void __fastcall TfrmMain::paintboxViewportMouseMove(TObject *Sender, TShiftState
     }
 
     lblHitTest->Caption =
-        IsInputDataValid() ?
+		IsInputDataValid() ?
           HitTest( X, Y ) ?
             _D( "in" )
           :
             _D( "out" )
         : _D( "-" );
     lblCoords->Caption =
-    #if ( __CODEGEARC__ >= 0x0750 )
-        Format( _D( "(%d,%d)" ), X, Y );
-    #else
+	#if ( __CODEGEARC__ >= 0x0750 )
+		// Since 10.4 (Sydney)
+		Format( _D( "(%d,%d)" ), X, Y );
+	#else
+		// Before 10.4
         Format( _D( "(%d,%d)" ), ARRAYOFCONST(( X, Y )) );
     #endif
 }
