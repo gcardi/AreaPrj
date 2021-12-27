@@ -1,3 +1,6 @@
 [submodule "Anafestica"]
 	path = Anafestica
 	url = https://github.com/gcardi/Anafestica.git
+[submodule "FmtCppBuilder"]
+	path = FmtCppBuilder
+	url = https://github.com/gcardi/FmtCppBuilder.git
