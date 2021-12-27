@@ -1,6 +1,6 @@
 # AreaPrj
 
-This project was created with the aim of introducing some analysis, design, and programming concepts into an OOP course with C++ Builder. Alas, things didn't work out, so I thought I'd publish this educational material. 
+This project was created with the aim of introducing some analysis, design, and programming concepts for an OOP course with C++ Builder. Alas, things didn't work out, so I thought I'd publish this educational material. 
 
 In order to show a complete application development cycle, a test suite should also have been provided, perhaps using either boost or google test suites, but unfortunately, this was not done.
 
