@@ -10,7 +10,7 @@ namespace AreaPrj {
 
 class PolynomialAreaCalc : public IAreaCalculator {
 public:
-    static constexpr LPCTSTR GetName() { return _D( "polinomiale" ); }
+    static constexpr LPCTSTR GetName() { return _D( "polinomial" ); }
 protected:
     virtual double DoCompute( IModel const & Model ) const override;
     virtual String DoGetDescription() const override { return GetName(); }

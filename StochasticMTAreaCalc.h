@@ -14,7 +14,7 @@ class StochasticMTAreaCalc : public IAreaCalculator {
 public:
     StochasticMTAreaCalc( size_t PointCount, size_t TaskCount )
         : pointCount_{ PointCount }, taskCount_{ TaskCount } {}
-    static constexpr LPCTSTR GetName() { return _D( "stocastico parallelo" ); }
+    static constexpr LPCTSTR GetName() { return _D( "parallel stochastic" ); }
 protected:
     virtual double DoCompute( IModel const & Model ) const override;
     virtual String DoGetDescription() const override;

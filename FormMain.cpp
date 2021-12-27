@@ -11,7 +11,6 @@
 #include <thread>
 
 #include <boost/geometry.hpp>
-//#include <boost/geometry/geometries/geometries.hpp>
 
 #include "GDIRenderer.h"
 #include "GDIPlusRenderer.h"
@@ -21,6 +20,7 @@
 #include "Cursor.h"
 #include "FormMain.h"
 #include "StochasticMTAreaCalc.h"
+#include "FmtCppBuilder/include/SysUt.Fmt.h"
 
 //---------------------------------------------------------------------------
 
@@ -50,20 +50,22 @@ using boost::geometry::model::box;
 
 //---------------------------------------------------------------------------
 
-// Questa funzione (mai chiamata) serve a verificare che la classe TfrmMain,
-// che ha più di una base, implementi tutte le funzioni virtuali delle classi
-// da cui deriva. Alcune delle basi di TfrmMain sono classi astratte prive
-// di dati (che qui fungono da interfacce). Il meccanismo di creazione della
-// istanza assegnata al puntatore frmMain presente in Area.cpp è siffatto:
+// This function (never really called) is used to verify that the TfrmMain
+// class, which derives from multiple interfaces and classes, implements
+// all the virtual functions of the bases from which it derives.
+// Some of the bases of TfrmMain are abstract dataless classes (which act as
+// interfaces here). The mechanism for creating the instance assigned
+// to the frmMain pointer in Area.cpp is as follows:
 //
 //  Application->CreateForm(__classid(TfrmMain), &frmMain);
 //
-// Putroppo questi non produce errori se i metodi puri virtuali non sono tutti
-// implementati in TfrmMain. Per ovviare a questo inconveniente si crea una
-// funzione, che non verrà mai chiamata e che quindi non consuma risorse,
-// per innescare il meccanismo di verifica intrinseco nel C++ che pretente
-// che tutte le funzioni pure virtuali ereditate da una classe concreta siano
-// implementate.
+// Unfortunately, it does not produce errors if the pure virtual methods
+// are not all implemented in TfrmMain. To overcome this drawback, a function
+// is created, which will never be called and therefore does not consume
+// resources, to trigger the intrinsic verification mechanism in C++
+// which claims that all pure virtual functions inherited are implemented
+// for a concrete class.
+
 namespace ValidCtrl {
 void Test() {
     new ::TfrmMain( nullptr );
@@ -230,7 +232,7 @@ void TfrmMain::UpdateModel()
     inputDataValid_ = TextSize < 1000.0 && TextSize > 0.0;
     if ( IsInputDataValid() ) {
         GetController().SetText(
-            IView::GetText(), // Iview:: per risolvere l'ambiguità con Vcl::Controls::TControl
+            IView::GetText(), // IView:: to resolve the ambiguity with Vcl::Controls::TControl
             GetFontName(), TextSize, ofsX_, ofsY_, GetBold(), GetItalic()
         );
         UpdateBoundingBoxValues();
@@ -355,7 +357,7 @@ void __fastcall TfrmMain::actAreaExecute(TObject *Sender)
     TCursorManager CursorManager;
     ShowMessage(
         Format(
-            _D( "L'area calcolata con il metodo %s è %f u²"  ),
+            _D( "The area calculated with the %s method is %f u²"  ),
             ARRAYOFCONST((
                 areaCalc_->GetDescription(),
                 static_cast<long double>(
@@ -431,12 +433,10 @@ void TfrmMain::UpdateBoundingBoxValues()
         box<AreaPrj::IModel::PointType> BoundingBox;
         envelope( GetModel().GetPolygons(), BoundingBox );
         lblBoundingBox->Caption =
-            Format(
+            SysUt::Fmt(
                 _D( "(%.1f,%.1f)" ),
-                ARRAYOFCONST((
-                    BoundingBox.max_corner().x() - BoundingBox.min_corner().x(),
-                    BoundingBox.max_corner().y() - BoundingBox.min_corner().y()
-                ))
+                BoundingBox.max_corner().x() - BoundingBox.min_corner().x(),
+                BoundingBox.max_corner().y() - BoundingBox.min_corner().y()
             );
     }
     else {

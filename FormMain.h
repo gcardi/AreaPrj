@@ -14,6 +14,9 @@
 #include <Vcl.ActnList.hpp>
 #include <Vcl.ActnMan.hpp>
 
+#include "anafestica/PersistFormVCL.h"
+#include "anafestica/CfgRegistrySingleton.h"
+
 #include <memory>
 
 #include "IController.h"
@@ -26,8 +29,8 @@
 
 #include "Calc.h"
 
-// Classe necessaria per ingannare l'IDE di Embarcadero a cui non piace
-// la multipla ereditarietà a livello di classi derivate da TObject
+// This class is needed to fool the Embarcadero's IDE which doesn't like
+// multiple inheritance at the level of TObject derived classes
 class TMIfrmMain : public TForm, public AreaPrj::IView, public AreaPrj::IObserver {
 public:
     template<typename...A>
@@ -119,7 +122,6 @@ private:	// User declarations
     std::unique_ptr<AreaPrj::IAreaCalculator> areaCalc_ { MakeAreaCalculator() };
 
     bool HitTest( int X, int Y ) const;
-    //AreaPrj::IModel const & GetModel() const { return GetController().GetModel(); }
     double GetThickness() const;
     void SetThickness( double Val );
 
