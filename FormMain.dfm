@@ -2,8 +2,8 @@ object frmMain: TfrmMain
   Left = 0
   Top = 0
   Caption = 'Area'
-  ClientHeight = 346
-  ClientWidth = 550
+  ClientHeight = 449
+  ClientWidth = 718
   Color = clBtnFace
   Constraints.MinHeight = 250
   Constraints.MinWidth = 480
@@ -20,8 +20,8 @@ object frmMain: TfrmMain
     AlignWithMargins = True
     Left = 16
     Top = 130
-    Width = 518
-    Height = 200
+    Width = 686
+    Height = 303
     Margins.Left = 16
     Margins.Top = 16
     Margins.Right = 16
@@ -32,14 +32,16 @@ object frmMain: TfrmMain
     ShowCaption = False
     TabOrder = 0
     OnResize = pnlViewportResize
+    ExplicitWidth = 518
+    ExplicitHeight = 200
     DesignSize = (
-      518
-      200)
+      686
+      303)
     object paintboxViewport: TPaintBox
       Left = 1
       Top = 1
-      Width = 516
-      Height = 198
+      Width = 684
+      Height = 301
       Cursor = crCross
       Align = alClient
       OnMouseDown = paintboxViewportMouseDown
@@ -48,10 +50,12 @@ object frmMain: TfrmMain
       OnMouseUp = paintboxViewportMouseUp
       OnPaint = paintboxViewportPaint
       ExplicitTop = 0
+      ExplicitWidth = 516
+      ExplicitHeight = 198
     end
     object lblHitTest: TLabel
-      Left = 489
-      Top = 178
+      Left = 657
+      Top = 281
       Width = 5
       Height = 13
       Anchors = [akRight, akBottom]
@@ -66,8 +70,8 @@ object frmMain: TfrmMain
       ExplicitTop = 251
     end
     object Label5: TLabel
-      Left = 471
-      Top = 178
+      Left = 639
+      Top = 281
       Width = 16
       Height = 13
       Alignment = taRightJustify
@@ -120,7 +124,7 @@ object frmMain: TfrmMain
     end
     object lblCoords: TLabel
       Left = 9
-      Top = 178
+      Top = 281
       Width = 3
       Height = 13
       Anchors = [akLeft, akBottom]
@@ -130,76 +134,81 @@ object frmMain: TfrmMain
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitTop = 178
     end
     object lblBoundingBox: TLabel
-      Left = 507
+      Left = 675
       Top = 11
       Width = 3
       Height = 13
       Alignment = taRightJustify
       Anchors = [akTop, akRight]
+      ExplicitLeft = 507
     end
   end
   object Panel1: TPanel
     Left = 0
     Top = 51
-    Width = 550
+    Width = 718
     Height = 63
     Align = alTop
     BevelOuter = bvNone
     Caption = 'pnlText'
     ShowCaption = False
     TabOrder = 1
+    ExplicitWidth = 550
     DesignSize = (
-      550
+      718
       63)
     object Label1: TLabel
-      Left = 17
+      Left = 19
       Top = 9
-      Width = 27
+      Width = 22
       Height = 13
-      Caption = 'Testo'
+      Caption = 'Text'
     end
     object Label3: TLabel
-      Left = 186
+      Left = 356
       Top = 9
       Width = 22
       Height = 13
       Anchors = [akTop, akRight]
       Caption = 'Font'
-      ExplicitLeft = 269
+      ExplicitLeft = 188
     end
     object Label4: TLabel
-      Left = 379
+      Left = 549
       Top = 9
-      Width = 35
+      Width = 31
       Height = 13
       Anchors = [akTop, akRight]
-      Caption = 'Altezza'
-      ExplicitLeft = 462
+      Caption = 'Height'
+      ExplicitLeft = 381
     end
     object checkboxBold: TCheckBox
-      Left = 459
+      Left = 627
       Top = 13
       Width = 71
       Height = 17
       Anchors = [akTop, akRight]
-      Caption = 'Grassetto'
+      Caption = 'Bold'
       TabOrder = 0
       OnClick = TextChanged
+      ExplicitLeft = 459
     end
     object checkboxItalic: TCheckBox
-      Left = 459
+      Left = 627
       Top = 36
       Width = 57
       Height = 17
       Anchors = [akTop, akRight]
-      Caption = 'Corsivo'
+      Caption = 'Italic'
       TabOrder = 1
       OnClick = TextChanged
+      ExplicitLeft = 459
     end
     object comboboxFontName: TComboBox
-      Left = 186
+      Left = 354
       Top = 24
       Width = 173
       Height = 21
@@ -207,19 +216,21 @@ object frmMain: TfrmMain
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnChange = TextChanged
+      ExplicitLeft = 186
     end
     object edtText: TEdit
       Left = 17
       Top = 24
-      Width = 149
+      Width = 317
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 3
       Text = 'OqgAW'
       OnChange = TextChanged
+      ExplicitWidth = 149
     end
     object edtTextSize: TEdit
-      Left = 379
+      Left = 547
       Top = 24
       Width = 65
       Height = 21
@@ -230,36 +241,38 @@ object frmMain: TfrmMain
       Text = '180'
       OnExit = TextChanged
       OnKeyPress = edtTextSizeKeyPress
+      ExplicitLeft = 379
     end
   end
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 550
+    Width = 718
     Height = 51
     Align = alTop
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 2
+    ExplicitWidth = 550
     DesignSize = (
-      550
+      718
       51)
     object Label7: TLabel
-      Left = 438
+      Left = 608
       Top = 9
-      Width = 65
+      Width = 32
       Height = 13
       Anchors = [akTop, akRight]
-      Caption = 'Visualizzatore'
-      ExplicitLeft = 552
+      Caption = 'Viewer'
+      ExplicitLeft = 440
     end
     object Label2: TLabel
-      Left = 112
+      Left = 114
       Top = 9
       Width = 36
       Height = 13
-      Caption = 'Metodo'
+      Caption = 'Method'
     end
     object Button1: TButton
       Left = 17
@@ -270,7 +283,7 @@ object frmMain: TfrmMain
       TabOrder = 0
     end
     object comboboxRenderer: TComboBox
-      Left = 438
+      Left = 606
       Top = 24
       Width = 96
       Height = 21
@@ -278,6 +291,7 @@ object frmMain: TfrmMain
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnChange = comboboxRendererChange
+      ExplicitLeft = 438
     end
     object comboboxAreaMethod: TComboBox
       Left = 112
