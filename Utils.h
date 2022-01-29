@@ -5,6 +5,8 @@
 
 #include <System.Classes.hpp>
 
+#include <algorithm>
+#include <iterator>
 #include <memory>
 
 namespace AreaPrj {
@@ -19,9 +21,9 @@ R ToGDIPolygon( T const & Ring )
 
     GDIPoly.reserve( Ring.size() );
 
-    transform(
-        begin( Ring ), end( Ring ),
-        back_inserter( GDIPoly ),
+    std::transform(
+        std::begin( Ring ), end( Ring ),
+        std::back_inserter( GDIPoly ),
         []( auto & Pt ) {
             return typename R::value_type( Pt.x(), Pt.y() );
         }
