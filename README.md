@@ -14,4 +14,3 @@ While it is easy to calculate the area of simple and regular geometric figures, 
 
 This program uses the acronym SOLID for the implementation of its parts. Furthermore, the MVC pattern was used for the structure of the application.
 
-Sorry for the improper use of the English language, but my level is less than scholastic.
