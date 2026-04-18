@@ -14,7 +14,6 @@ object frmMain: TfrmMain
   Font.Name = 'Tahoma'
   Font.Style = []
   OnKeyPress = FormKeyPress
-  PixelsPerInch = 96
   TextHeight = 13
   object pnlViewport: TPanel
     AlignWithMargins = True
@@ -32,8 +31,6 @@ object frmMain: TfrmMain
     ShowCaption = False
     TabOrder = 0
     OnResize = pnlViewportResize
-    ExplicitWidth = 518
-    ExplicitHeight = 200
     DesignSize = (
       686
       303)
@@ -156,7 +153,6 @@ object frmMain: TfrmMain
     Caption = 'pnlText'
     ShowCaption = False
     TabOrder = 1
-    ExplicitWidth = 550
     DesignSize = (
       718
       63)
@@ -194,7 +190,6 @@ object frmMain: TfrmMain
       Caption = 'Bold'
       TabOrder = 0
       OnClick = TextChanged
-      ExplicitLeft = 459
     end
     object checkboxItalic: TCheckBox
       Left = 627
@@ -205,7 +200,6 @@ object frmMain: TfrmMain
       Caption = 'Italic'
       TabOrder = 1
       OnClick = TextChanged
-      ExplicitLeft = 459
     end
     object comboboxFontName: TComboBox
       Left = 354
@@ -216,7 +210,6 @@ object frmMain: TfrmMain
       Anchors = [akTop, akRight]
       TabOrder = 2
       OnChange = TextChanged
-      ExplicitLeft = 186
     end
     object edtText: TEdit
       Left = 17
@@ -227,7 +220,6 @@ object frmMain: TfrmMain
       TabOrder = 3
       Text = 'OqgAW'
       OnChange = TextChanged
-      ExplicitWidth = 149
     end
     object edtTextSize: TEdit
       Left = 547
@@ -241,7 +233,6 @@ object frmMain: TfrmMain
       Text = '180'
       OnExit = TextChanged
       OnKeyPress = edtTextSizeKeyPress
-      ExplicitLeft = 379
     end
   end
   object Panel2: TPanel
@@ -254,7 +245,6 @@ object frmMain: TfrmMain
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 2
-    ExplicitWidth = 550
     DesignSize = (
       718
       51)
@@ -291,7 +281,6 @@ object frmMain: TfrmMain
       Anchors = [akTop, akRight]
       TabOrder = 1
       OnChange = comboboxRendererChange
-      ExplicitLeft = 438
     end
     object comboboxAreaMethod: TComboBox
       Left = 112

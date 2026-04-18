@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------------
+﻿//---------------------------------------------------------------------------
 
 #include <vcl.h>
 #pragma hdrstop
@@ -21,7 +21,7 @@
 #include "Cursor.h"
 #include "FormMain.h"
 #include "StochasticMTAreaCalc.h"
-#include "FmtCppBuilder/include/SysUt.Fmt.h"
+#include "SysUt.Fmt.h"
 
 //---------------------------------------------------------------------------
 
