@@ -38,6 +38,7 @@ void GDIRenderer::DoPrepareRendering( IModel const & Model )
 void GDIRenderer::DoRender( Vcl::Graphics::TCanvas& Canvas ) const
 {
     for ( auto const & Polygon : polygons_ ) {
+        if ( Polygon.size() < 2 ) continue;
         Canvas.Polyline( Polygon.data(), Polygon.size() - 1 );
     }
 }

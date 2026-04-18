@@ -2,6 +2,8 @@
 
 #pragma hdrstop
 
+#include <cmath>
+
 #include <boost/geometry.hpp>
 
 #include "PolynomialAreaCalc.h"
@@ -14,7 +16,7 @@ namespace AreaPrj {
 
 double PolynomialAreaCalc::DoCompute( IModel const & Model ) const
 {
-    return boost::geometry::area( Model.GetPolygons() );
+    return std::abs( boost::geometry::area( Model.GetPolygons() ) );
 }
 
 } // End of namespace AreaPrj

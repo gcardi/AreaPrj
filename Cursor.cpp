@@ -37,7 +37,7 @@ TCursor TCursorManager::Set( TCursor Cursor )
 void TCursorManager::Restore()
 {
     Screen->Cursor = oldCursor_;
-    restored_ = false;
+    restored_ = true;
 }
 //---------------------------------------------------------------------------
 
