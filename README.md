@@ -1,17 +1,11 @@
 # AreaPrj
 
-This project was created with the aim of introducing some analysis, design, and programming concepts for an OOP course with C++ Builder. Alas, things didn't work out, so I thought I'd publish this educational material. 
+This project was developed to introduce key concepts of analysis, design, and object-oriented programming using C++ Builder.
 
-In order to show a complete application development cycle, some test modules should also have been provided, perhaps using either boost or google test suites, but unfortunately, this was not done.
+It is based on a realistic scenario involving a company that specializes in large-scale decorative work on walls and floors, as well as in high-impact signage such as airport runways, racing circuits, and similar environments.
 
-I had also started drafting the documentation using Doxygen, but again, as with the test suite, there weren't the resources to continue.
+One of the main challenges for this type of business is producing accurate cost estimates for clients. To do so, it is essential to precisely calculate the surface area to be painted, allowing for reliable estimates of both the amount of paint required and the time needed to complete the work.
 
-In the imagination, this application stems from a request from one of our hypothetical customers who represent a company specialized in particular decorations on the walls or floors of large buildings, or which deals with large signage, for example for airport runways, circuits for car races or something similar.
+While calculating the area of simple geometric shapes is straightforward, determining the surface covered by text is significantly more complex. This is where software becomes particularly valuable. By defining the text, selecting font properties, and specifying its height, the application can compute the corresponding surface area in standard square units.
 
-The main problem of our client concerns the generation of precise cost estimates to be submitted to his client. In fact, he must accurately calculate the surface of the areas to be painted in order to be able to estimate with a good approximation the volume of the paint to be used and the time required to complete the job.
-
-While it is easy to calculate the area of simple and regular geometric figures, calculating the surface occupied by a writing becomes a non-trivial operation. But this, fortunately, is a job suitable for a computer. With a special program, it will be sufficient to define the text, the properties of the font to be used and the height of the text itself, in order to have the value corresponding to the surface expressed in “conventional” square units.
-
-This program uses the acronym SOLID for the implementation of its parts. Furthermore, the MVC pattern was used for the structure of the application.
-
-Sorry for the improper use of the English language, but my level is less than scholastic.
+From a technical perspective, the application is built following SOLID principles and structured according to the MVC architectural pattern, ensuring clarity, maintainability, and scalability.
