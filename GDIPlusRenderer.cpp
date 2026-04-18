@@ -10,8 +10,6 @@
 #include "GDIPlusRenderer.h"
 #include "Utils.h"
 
-using std::transform;
-
 //---------------------------------------------------------------------------
 
 #pragma package(smart_init)
