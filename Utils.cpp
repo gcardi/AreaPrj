@@ -37,13 +37,15 @@ unique_ptr<TStringList> RetrieveFontList()
         static int WINAPI Proc( LOGFONT const * Elfe, TEXTMETRIC const * Tme,
                                 DWORD FontType, LPARAM LParam )
         {
-            if ( FontType & TRUETYPE_FONTTYPE ) {
-                auto SL = reinterpret_cast<TStringList*>( LParam );
-                String const FontName{ Elfe->lfFaceName };
-                if ( !SL->Count ||
+			//String const FN{ Elfe->lfFaceName };
+			//::OutputDebugString( Format( _D( "%s, 0x%08X" ), ARRAYOFCONST(( FN, FontType )) ).c_str() );
+			if ( FontType & ( TRUETYPE_FONTTYPE | DEVICE_FONTTYPE ) ) {
+				auto SL = reinterpret_cast<TStringList*>( LParam );
+				String const FontName{ Elfe->lfFaceName };
+				if ( !SL->Count ||
                      (
                        !SameText( FontName, SL->Strings[SL->Count-1] ) &&
-                       !FontName.IsEmpty() && FontName[1] != _T( '@' )
+					   !FontName.IsEmpty() && FontName[1] != _D( '@' )
                      )
                 ) {
                     SL->Append( FontName );
