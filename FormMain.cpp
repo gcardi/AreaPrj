@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <vector>
 #include <thread>
+#include <cstdint>
 
 #include <boost/geometry.hpp>
 
@@ -47,6 +48,38 @@ using AreaPrj::StochasticMTAreaCalc;
 
 using boost::geometry::envelope;
 using boost::geometry::model::box;
+
+//---------------------------------------------------------------------------
+
+namespace {
+
+enum class AreaMethodKind { Polynomial, Stochastic, StochasticMT };
+enum class RendererKind   { GDI, GDIPlus };
+
+// Pack an enum value into a TObject* slot so that each ComboBox item
+// carries its own dispatch tag, decoupling display order from the factory.
+template<typename E>
+TObject* ToTag( E Kind )
+{
+    return reinterpret_cast<TObject*>(
+        static_cast<intptr_t>( static_cast<int>( Kind ) )
+    );
+}
+
+// NB: TComboBox/TStrings property getters (GetItemIndex, GetCount) are
+// non-const virtuals in the VCL, so the reference parameter can't be const.
+template<typename E>
+E GetItemKind( TComboBox& Cb, E Fallback )
+{
+    auto& Items = *Cb.Items;
+    auto const Idx = Cb.ItemIndex;
+    if ( Idx < 0 || Idx >= Items.Count ) return Fallback;
+    return static_cast<E>(
+        reinterpret_cast<intptr_t>( Items.Objects[Idx] )
+    );
+}
+
+} // end anonymous namespace
 
 //---------------------------------------------------------------------------
 
@@ -95,10 +128,12 @@ __fastcall TfrmMain::TfrmMain(TComponent* Owner)
 std::unique_ptr<TStringList> TfrmMain::GetAreaMethodNameList()
 {
     auto SL = make_unique<TStringList>();
-    SL->Append( PolynomialAreaCalc::GetName() );
-    SL->Append( StochasticAreaCalc::GetName() );
+    SL->AddObject( PolynomialAreaCalc::GetName(), ToTag( AreaMethodKind::Polynomial ) );
+    SL->AddObject( StochasticAreaCalc::GetName(), ToTag( AreaMethodKind::Stochastic ) );
     if ( thread::hardware_concurrency() > 1 ) {
-        SL->Append( StochasticMTAreaCalc::GetName() );
+        SL->AddObject(
+            StochasticMTAreaCalc::GetName(), ToTag( AreaMethodKind::StochasticMT )
+        );
     }
     return SL;
 }
@@ -107,24 +142,25 @@ std::unique_ptr<TStringList> TfrmMain::GetAreaMethodNameList()
 // Factory method
 std::unique_ptr<AreaPrj::IAreaCalculator> TfrmMain::MakeAreaCalculator() const
 {
-    switch ( comboboxAreaMethod->ItemIndex ) {
-        case 1:
+    switch ( GetItemKind( *comboboxAreaMethod, AreaMethodKind::Polynomial ) ) {
+        case AreaMethodKind::Stochastic:
             return make_unique<StochasticAreaCalc>( 1000000 );
-        case 2:
+        case AreaMethodKind::StochasticMT:
             return make_unique<StochasticMTAreaCalc>(
                 1000000, thread::hardware_concurrency()
             );
-        default:
-            return make_unique<PolynomialAreaCalc>();
+        case AreaMethodKind::Polynomial:
+            break;
     }
+    return make_unique<PolynomialAreaCalc>();
 }
 //---------------------------------------------------------------------------
 
 std::unique_ptr<TStringList> TfrmMain::GetRendererNameList()
 {
     auto SL = make_unique<TStringList>();
-    SL->Append( GDIRenderer::GetDescription() );
-    SL->Append( GDIPlusRenderer::GetDescription() );
+    SL->AddObject( GDIRenderer::GetDescription(),     ToTag( RendererKind::GDI ) );
+    SL->AddObject( GDIPlusRenderer::GetDescription(), ToTag( RendererKind::GDIPlus ) );
     return SL;
 }
 //---------------------------------------------------------------------------
@@ -132,12 +168,13 @@ std::unique_ptr<TStringList> TfrmMain::GetRendererNameList()
 // Factory method
 std::unique_ptr<IRenderer> TfrmMain::MakeRender() const
 {
-    switch ( comboboxRenderer->ItemIndex ) {
-        case 1:
+    switch ( GetItemKind( *comboboxRenderer, RendererKind::GDI ) ) {
+        case RendererKind::GDIPlus:
             return make_unique<GDIPlusRenderer>();
-        default:
-            return make_unique<GDIRenderer>();
+        case RendererKind::GDI:
+            break;
     }
+    return make_unique<GDIRenderer>();
 }
 //---------------------------------------------------------------------------
 
@@ -357,7 +394,7 @@ void __fastcall TfrmMain::actAreaExecute(TObject *Sender)
     TCursorManager CursorManager;
     ShowMessage(
         Format(
-            _D( "The area calculated with the %s method is %f u²"  ),
+            _D( "The area calculated with the %s method is %f uï¿½"  ),
             ARRAYOFCONST((
                 areaCalc_->GetDescription(),
                 static_cast<long double>(
