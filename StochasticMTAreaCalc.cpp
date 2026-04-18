@@ -61,7 +61,6 @@ double StochasticMTAreaCalc::DoCompute( IModel const & Model ) const
             std::async(
                 std::launch::async,
                 [&]( std::random_device::result_type seed, size_t PtCnt ) -> size_t {
-                    auto const & Polygons = Model.GetPolygons();
                     mt19937 Generator( seed );
                     uniform_real_distribution<> DisX(
                         BoundingBox.min_corner().x(),
