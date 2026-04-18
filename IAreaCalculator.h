@@ -11,6 +11,7 @@ public:
         return DoCompute( Model );
     }
     String GetDescription() const { return DoGetDescription(); }
+    virtual ~IAreaCalculator() = default;
 protected:
     virtual double DoCompute( IModel const & Model ) const = 0;
     virtual String DoGetDescription() const = 0;

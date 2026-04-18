@@ -14,6 +14,7 @@ public:
     void PrepareRendering( IModel const & Model ) { DoPrepareRendering( Model ); }
     void Render( Vcl::Graphics::TCanvas& Canvas ) const { DoRender( Canvas ); }
     String GetName() const { return DoGetName(); }
+    virtual ~IRenderer() = default;
 protected:
     virtual String DoGetName() const = 0;
     virtual void DoPrepareRendering( IModel const & Model ) = 0;
