@@ -79,6 +79,19 @@ E GetItemKind( TComboBox& Cb, E Fallback )
     );
 }
 
+// Invariant format settings: the text-size field must round-trip the same
+// way regardless of the user's Windows regional decimal separator.
+TFormatSettings const & InvariantFmt()
+{
+    static TFormatSettings const Fmt = []{
+        TFormatSettings f = TFormatSettings::Create();
+        f.DecimalSeparator = L'.';
+        f.ThousandSeparator = L',';
+        return f;
+    }();
+    return Fmt;
+}
+
 } // end anonymous namespace
 
 //---------------------------------------------------------------------------
@@ -241,15 +254,18 @@ void TfrmMain::DoSetFontName( String Val )
 
 double TfrmMain::DoGetTextSize() const
 {
-    return edtTextSize->Text.ToDouble();
+    return StrToFloat( edtTextSize->Text, InvariantFmt() );
 }
 //---------------------------------------------------------------------------
 
 void TfrmMain::DoSetTextSize( double Val )
 {
-    if ( edtTextSize->Text.ToDouble() != Val ) {
-        edtTextSize->Text =
-            Format( _D( "%g" ), ARRAYOFCONST(( static_cast<long double>( Val ) )) );
+    if ( StrToFloat( edtTextSize->Text, InvariantFmt() ) != Val ) {
+        edtTextSize->Text = Format(
+            _D( "%g" ),
+            ARRAYOFCONST(( static_cast<long double>( Val ) )),
+            InvariantFmt()
+        );
         UpdateModel();
     }
 }
@@ -264,7 +280,7 @@ void __fastcall TfrmMain::TextChanged(TObject *Sender)
 
 void TfrmMain::UpdateModel()
 {
-    auto TextSize = StrToFloatDef( edtTextSize->Text, -1.0 );
+    auto TextSize = StrToFloatDef( edtTextSize->Text, -1.0, InvariantFmt() );
     // Validate Input Data
     inputDataValid_ = TextSize < 1000.0 && TextSize > 0.0;
     if ( IsInputDataValid() ) {
@@ -394,7 +410,7 @@ void __fastcall TfrmMain::actAreaExecute(TObject *Sender)
     TCursorManager CursorManager;
     ShowMessage(
         Format(
-            _D( "The area calculated with the %s method is %f u�"  ),
+            _D( "The area calculated with the %s method is %f u\xB2"  ),
             ARRAYOFCONST((
                 areaCalc_->GetDescription(),
                 static_cast<long double>(
