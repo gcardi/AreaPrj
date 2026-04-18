@@ -85,10 +85,10 @@ inline void Adv( TIt& Pi, PIt& Ti )
     advance( Ti, 1 );
 }
 
-// Ogni tanto capita che una glyph abbia i ring "invertiti" (cioè
-// quello esterno in uno interno e viceversa). La strategia è
-// di cercare il ring interno con l'area più grande e scambiarlo
-// con quello esterno se questi è più grande
+// Ogni tanto capita che una glyph abbia i ring "invertiti" (cioï¿½
+// quello esterno in uno interno e viceversa). La strategia ï¿½
+// di cercare il ring interno con l'area piï¿½ grande e scambiarlo
+// con quello esterno se questi ï¿½ piï¿½ grande
 void FixGlyph( IModel::PolygonType& Polygon )
 {
     namespace bg = boost::geometry;
@@ -140,7 +140,7 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
           :
             FontStyle::FontStyleRegular,
         FontSize,
-        Gdiplus::Point( DX, DY ),
+        Gdiplus::PointF( DX, DY ),
         &sf
     );
     GPath.CloseFigure();

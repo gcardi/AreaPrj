@@ -53,7 +53,10 @@ double StochasticMTAreaCalc::DoCompute( IModel const & Model ) const
     auto const & Polygons = Model.GetPolygons();
     envelope( Polygons, BoundingBox );
     std::vector<std::future<size_t>> Tasks;
+    size_t const BasePerTask = pointCount_ / taskCount_;
+    size_t const Remainder   = pointCount_ % taskCount_;
     for ( size_t n = 0 ; n < taskCount_ ; ++n ) {
+        size_t const TaskPtCnt = BasePerTask + ( n < Remainder ? 1u : 0u );
         Tasks.push_back(
             std::async(
                 std::launch::async,
@@ -80,7 +83,7 @@ double StochasticMTAreaCalc::DoCompute( IModel const & Model ) const
                     return HitCnt;
                 },
                 rd_(),
-                pointCount_ / taskCount_
+                TaskPtCnt
             )
         );
     }
