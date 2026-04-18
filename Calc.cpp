@@ -110,6 +110,45 @@ void FixGlyph( IModel::PolygonType& Polygon )
     }
 }
 
+enum class RingTerminator { Closed, Marker };
+
+template<typename TIt, typename PIt, typename Ring>
+inline RingTerminator ReadRing( TIt& ti, PIt& pi, TIt te, Ring& R, bool IsOuter )
+{
+    R.emplace_back( pi->X, pi->Y );
+    Adv( ti, pi );
+
+    if ( !IsLine( ti, te ) ) {
+        throw Exception(
+            IsOuter
+              ? _D( "'line' expected: outer ring not closed" )
+              : _D( "'line' expected: inner ring not closed" )
+        );
+    }
+    R.emplace_back( pi->X, pi->Y );
+    Adv( ti, pi );
+
+    while ( IsLine( ti, te ) && !IsMarker( ti, te ) && !IsClosed( ti, te ) ) {
+        R.emplace_back( pi->X, pi->Y );
+        Adv( ti, pi );
+    }
+
+    if ( IsClosed( ti, te ) ) {
+        R.emplace_back( pi->X, pi->Y );
+        return RingTerminator::Closed;
+    }
+    if ( IsMarker( ti, te ) ) {
+        R.emplace_back( pi->X, pi->Y );
+        return RingTerminator::Marker;
+    }
+
+    throw Exception(
+        IsOuter
+          ? _D( "outer ring not properly closed" )
+          : _D( "inner ring not properly closed" )
+    );
+}
+
 void Calc::DoSetText( String Val, String FontName, double FontSize,
                       double DX, double DY, bool Bold, bool Italic )
 {
@@ -169,116 +208,26 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
     auto pe = end( Pts );
 
     for ( ; pi != pe ; ) {
-        // O1
-        if ( IsMove( ti, te ) ) {
-            // (A)
-            IModel::PolygonType Polygon;
-            Polygon.outer().emplace_back( pi->X, pi->Y );
-            Adv( ti, pi );
-            // O2
-            if ( IsLine( ti, te ) ) {
-                // (B)
-                Polygon.outer().emplace_back( pi->X, pi->Y );
-                Adv( ti, pi );
-                // O3
-                while ( IsLine( ti, te ) ) {
-                    if ( IsMarker( ti, te ) || IsClosed( ti, te ) ) {
-                        break;
-                    }
-                    // (B)
-                    Polygon.outer().emplace_back( pi->X, pi->Y );
-                    Adv( ti, pi );
-                }
-                if ( IsClosed( ti, te ) ) {
-                    // (B) (Adv implicito)
-                    Polygon.outer().emplace_back( pi->X, pi->Y );
-                    do {
-                        Adv( ti, pi );
-                        // I1
-                        if ( IsMove( ti, te ) ) {
-                            // (D)
-                            Polygon.inners().push_back({});
-                            Polygon.inners().back().emplace_back( pi->X, pi->Y );
-                            Adv( ti, pi );
-                            // I2
-                            if ( IsLine( ti, te ) ) {
-                                // (F)
-                                Polygon.inners().back().emplace_back(
-                                    pi->X, pi->Y
-                                );
-                                Adv( ti, pi );
-                                // I3
-                                while ( IsLine( ti, te ) ) {
-                                    if ( IsMarker( ti, te ) || IsClosed( ti, te ) ) {
-                                        break;
-                                    }
-                                    // (F)
-                                    Polygon.inners().back().emplace_back(
-                                        pi->X, pi->Y
-                                    );
-                                    Adv( ti, pi );
-                                }
-                                if ( IsClosed( ti, te ) ) {
-                                    // (F) (Adv implicito)
-                                    Polygon.inners().back().emplace_back(
-                                        pi->X, pi->Y
-                                    );
-                                    // Adv( ti, pi );
-                                    // goto I1
-                                }
-                                else if ( IsMarker( ti, te ) ) {
-                                    // (G) (Adv implicito)
-                                    Polygon.inners().back().emplace_back(
-                                        pi->X, pi->Y
-                                    );
-                                    FixGlyph( Polygon );
-                                    Polygons.push_back( Polygon );
-                                    // goto O1
-                                    break;
-                                }
-                                else {
-                                    throw Exception(
-                                        _D( "inner ring not properly closed" )
-                                    );
-                                }
-                            }
-                            else {
-                                throw Exception(
-                                    _D( "'line' expected: inner ring not closed" )
-                                );
-                            }
-                        }
-                        else {
-                            throw Exception(
-                                _D( "Starting 'move' expected for inner ring" )
-                            );
-                        }
-                    }
-                    while ( !IsMarker( ti, te ) );
-                }
-                else if ( IsMarker( ti, te ) ) {
-                    // (C) (Adv implicito)
-                    Polygon.outer().emplace_back( pi->X, pi->Y );
-                    FixGlyph( Polygon );
-                    Polygons.push_back( Polygon );
-                    // goto O1
-                }
-                else {
-                    throw Exception( _D( "outer ring not properly closed" ) );
-                }
-            }
-            else {
-                throw Exception(
-                    _D( "'line' expected: outer ring not closed" )
-                );
-            }
+        if ( !IsMove( ti, te ) ) {
+            throw Exception( _D( "Starting 'move' expected for outer ring" ) );
         }
-		else
-		{
-			throw Exception( _D( "Starting 'move' expected for outer ring" ) );
-		}
-		Adv( ti, pi );
-	}
+
+        IModel::PolygonType Polygon;
+        auto term = ReadRing( ti, pi, te, Polygon.outer(), true );
+
+        while ( term == RingTerminator::Closed ) {
+            Adv( ti, pi );
+            if ( !IsMove( ti, te ) ) {
+                throw Exception( _D( "Starting 'move' expected for inner ring" ) );
+            }
+            Polygon.inners().push_back({});
+            term = ReadRing( ti, pi, te, Polygon.inners().back(), false );
+        }
+
+        FixGlyph( Polygon );
+        Polygons.push_back( Polygon );
+        Adv( ti, pi );
+    }
     geo_.SetPolygons( std::move( Polygons ) );
 }
 
