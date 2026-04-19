@@ -3,7 +3,8 @@
     "allow": [
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
-      "Bash(cmd.exe //c \".\\\\\\\\_build_tmp.bat Build\")"
+      "Bash(cmd.exe //c \".\\\\\\\\_build_tmp.bat Build\")",
+      "Read(//c/Users/Public/Documents/Embarcadero/Studio/37.0/Samples/CPP/VCL/Skia4Delphi/**)"
     ]
   }
 }
