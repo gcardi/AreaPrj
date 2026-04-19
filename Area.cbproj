@@ -115,7 +115,6 @@
         <PackageImports>adortl;appanalytics;bcbie;bcbsmp;bindcomp;bindcompdbx;bindcompfmx;bindcompvcl;bindengine;CloudService;CustomIPTransport;DataSnapClient;DataSnapCommon;DataSnapConnectors;DatasnapConnectorsFreePascal;DataSnapFireDAC;DataSnapIndy10ServerTransport;DataSnapNativeClient;DataSnapProviderClient;DataSnapServer;DataSnapServerMidas;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXDb2Driver;DBXFirebirdDriver;DBXInformixDriver;DBXInterBaseDriver;DBXMSSQLDriver;DBXMySQLDriver;DBXOdbcDriver;DBXOracleDriver;DBXSqliteDriver;DBXSybaseASADriver;DBXSybaseASEDriver;dsnap;dsnapcon;dsnapxml;emsclient;emsclientfiredac;emsedge;emshosting;emsserverresource;EnhDbGridRunPkg;FireDAC;FireDACADSDriver;FireDACASADriver;FireDACCommon;FireDACCommonDriver;FireDACCommonODBC;FireDACDb2Driver;FireDACDBXDriver;FireDACDSDriver;FireDACIBDriver;FireDACInfxDriver;FireDACMongoDBDriver;FireDACMSAccDriver;FireDACMSSQLDriver;FireDACMySQLDriver;FireDACODBCDriver;FireDACOracleDriver;FireDACPgDriver;FireDACSqliteDriver;FireDACTDataDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;FMXTee;FmxTeeUI;ibmonitor;ibxbindings;ibxpress;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdb;inetdbxpress;NDrawGridPkgRun;QRWRunDXE10_3_w64;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;Tee;TeeDB;TeeUI;tethering;vcl;vclactnband;vcldb;vcldsnap;vclFireDAC;vclib;vclie;vclimg;VCLRESTComponents;VclSmp;vcltouch;vclwinx;vclx;xmlrtl;$(PackageImports)</PackageImports>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64x)'!=''">
-        <BCC_PCHName_Clang>PersistFormVCL.h</BCC_PCHName_Clang>
         <BT_BuildType>Debug</BT_BuildType>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
@@ -181,54 +180,6 @@
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="Anafestica\anafestica\Cfg.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>20</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\CfgConts.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>21</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\CfgItems.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>22</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\CfgJSON.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>23</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\CfgJSONSingleton.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>24</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\CfgNodeValueType.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>25</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\CfgRegistry.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>26</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\CfgRegistrySingleton.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>27</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\CfgXML.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>28</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\CfgXMLSingleton.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>29</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\FileVersionInfo.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>30</BuildOrder>
-        </None>
-        <None Include="Anafestica\anafestica\PersistFormVCL.h">
-            <VirtualFolder>{5D554DB4-2629-47CD-97BC-44052F063E13}</VirtualFolder>
-            <BuildOrder>31</BuildOrder>
-        </None>
         <CppCompile Include="Area.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
@@ -245,6 +196,10 @@
             <VirtualFolder>{5CD95D60-1096-4838-9D34-EEC4AF746E03}</VirtualFolder>
             <DependentOn>Cursor.h</DependentOn>
             <BuildOrder>19</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="Direct2DRenderer.cpp">
+            <DependentOn>Direct2DRenderer.h</DependentOn>
+            <BuildOrder>14</BuildOrder>
         </CppCompile>
         <None Include="FmtCppBuilder\include\SysUt.Fmt.h">
             <VirtualFolder>{2F7A925A-C519-4221-9C09-2C56901B54D2}</VirtualFolder>
@@ -263,14 +218,6 @@
         <CppCompile Include="GDIRenderer.cpp">
             <DependentOn>GDIRenderer.h</DependentOn>
             <BuildOrder>12</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="SKIARenderer.cpp">
-            <DependentOn>SKIARenderer.h</DependentOn>
-            <BuildOrder>13</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="Direct2DRenderer.cpp">
-            <DependentOn>Direct2DRenderer.h</DependentOn>
-            <BuildOrder>14</BuildOrder>
         </CppCompile>
         <CppCompile Include="Geometrie.cpp">
             <DependentOn>Geometrie.h</DependentOn>
@@ -311,6 +258,10 @@
         <CppCompile Include="PolynomialAreaCalc.cpp">
             <DependentOn>PolynomialAreaCalc.h</DependentOn>
             <BuildOrder>17</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="SKIARenderer.cpp">
+            <DependentOn>SKIARenderer.h</DependentOn>
+            <BuildOrder>13</BuildOrder>
         </CppCompile>
         <CppCompile Include="StochasticAreaCalc.cpp">
             <DependentOn>StochasticAreaCalc.h</DependentOn>
@@ -359,7 +310,6 @@
                     <ProjectProperties Name="IndexFiles">False</ProjectProperties>
                 </ProjectProperties>
                 <VFOLDERS>
-                    <VFOLDER ID="{5D554DB4-2629-47CD-97BC-44052F063E13}" name="Anafestica"/>
                     <VFOLDER ID="{2F7A925A-C519-4221-9C09-2C56901B54D2}" name="FmtCppBuilder"/>
                     <VFOLDER ID="{04150546-B3D4-483A-8E85-B656593EE4C9}" name="Interfaces"/>
                     <VFOLDER ID="{5CD95D60-1096-4838-9D34-EEC4AF746E03}" name="Misc"/>
@@ -563,8 +513,13 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName=".\Win32\Debug\Area.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName=".\Win32\Debug\Area.tds" Configuration="Debug" Class="DebugSymbols"/>
                 <DeployFile LocalName=".\Win64\Debug\Area.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName=".\Win64x\Release\Area.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win64x">
+                        <RemoteName>Area.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
