@@ -11,6 +11,7 @@ class IObserver;
 
 class IController {
 public:
+    virtual ~IController() = default;
     void AddObserverToModel( IObserver& Observer ) { DoAddObserverToModel( Observer ); }
     IModel const & GetModel() const { return DoGetModel(); }
     void SetText( String Text, String FontName, double FontSize,

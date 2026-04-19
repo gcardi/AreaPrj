@@ -9,6 +9,7 @@ namespace AreaPrj {
 
 class IModel {
 public:
+    virtual ~IModel() = default;
     using CoordType = double;
     using PointType = boost::geometry::model::d2::point_xy<CoordType>;
     using PolygonType = boost::geometry::model::polygon<PointType>;
