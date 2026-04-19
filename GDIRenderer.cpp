@@ -23,10 +23,12 @@ void GDIRenderer::DoPrepareRendering( IModel const & Model, int OfsX, int OfsY )
     PolygonCont GdiPolygons;
 
     for ( auto const & Pol : Polygons ) {
-        GdiPolygons.push_back( ToGDIPolygon<Polygon>( Pol.outer(), OfsX, OfsY ) );
+        PolygonGroup Group;
+        Group.push_back( ToGDIPolygon<Ring>( Pol.outer(), OfsX, OfsY ) );
         for ( auto const & RingInner : Pol.inners() ) {
-            GdiPolygons.push_back( ToGDIPolygon<Polygon>( RingInner, OfsX, OfsY ) );
+            Group.push_back( ToGDIPolygon<Ring>( RingInner, OfsX, OfsY ) );
         }
+        GdiPolygons.push_back( std::move( Group ) );
     }
 
     polygons_ = std::move( GdiPolygons );
@@ -35,9 +37,35 @@ void GDIRenderer::DoPrepareRendering( IModel const & Model, int OfsX, int OfsY )
 
 void GDIRenderer::DoRender( Vcl::Graphics::TCanvas& Canvas ) const
 {
-    for ( auto const & Polygon : polygons_ ) {
-        if ( Polygon.size() < 2 ) continue;
-        Canvas.Polyline( Polygon.data(), Polygon.size() - 1 );
+    if ( GetFilled() ) {
+        Canvas.Pen->Style = psSolid;
+        Canvas.Pen->Color = clBlack;
+        Canvas.Brush->Style = bsSolid;
+        Canvas.Brush->Color = static_cast<TColor>( RGB( 200, 220, 255 ) );
+        SetPolyFillMode( Canvas.Handle, ALTERNATE );
+        for ( auto const & Group : polygons_ ) {
+            std::vector<TPoint> AllPoints;
+            std::vector<int> Counts;
+            for ( auto const & Ring : Group ) {
+                if ( Ring.size() < 2 ) continue;
+                AllPoints.insert( AllPoints.end(), Ring.begin(), Ring.end() );
+                Counts.push_back( static_cast<int>( Ring.size() ) );
+            }
+            if ( !Counts.empty() ) {
+                ::PolyPolygon(
+                    Canvas.Handle, AllPoints.data(),
+                    Counts.data(), static_cast<int>( Counts.size() )
+                );
+            }
+        }
+    }
+    else {
+        for ( auto const & Group : polygons_ ) {
+            for ( auto const & Ring : Group ) {
+                if ( Ring.size() < 2 ) continue;
+                Canvas.Polyline( Ring.data(), Ring.size() - 1 );
+            }
+        }
     }
 }
 //---------------------------------------------------------------------------

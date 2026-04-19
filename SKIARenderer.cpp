@@ -24,10 +24,12 @@ void SKIARenderer::DoPrepareRendering( IModel const & Model, int OfsX, int OfsY 
     auto& Polygons = Model.GetPolygons();
     PolygonCont SkiaPolygons;
     for ( auto const & Pol : Polygons ) {
-        SkiaPolygons.push_back( ToGDIPolygon<Polygon>( Pol.outer(), OfsX, OfsY ) );
+        PolygonGroup Group;
+        Group.push_back( ToGDIPolygon<Ring>( Pol.outer(), OfsX, OfsY ) );
         for ( auto const & RingInner : Pol.inners() ) {
-            SkiaPolygons.push_back( ToGDIPolygon<Polygon>( RingInner, OfsX, OfsY ) );
+            Group.push_back( ToGDIPolygon<Ring>( RingInner, OfsX, OfsY ) );
         }
+        SkiaPolygons.push_back( std::move( Group ) );
     }
     polygons_ = std::move( SkiaPolygons );
 }
@@ -48,20 +50,48 @@ void SKIARenderer::DoRender( Vcl::Graphics::TCanvas& Canvas ) const
 
     Vcl::Skia::SkiaDraw( Bmp.get(),
         [this]( const _di_ISkCanvas ACanvas ) {
+            bool const Filled = GetFilled();
+
+            _di_ISkPaint LFillPaint;
+            if ( Filled ) {
+                LFillPaint = SkPaint( TSkPaintStyle::Fill );
+                LFillPaint->AntiAlias = true;
+                LFillPaint->Color = 0xFFC8DCFF; // RGB(200,220,255)
+            }
+
             auto LPaint = SkPaint( TSkPaintStyle::Stroke );
             LPaint->AntiAlias = true;
             LPaint->Color = 0xFF000000;
             LPaint->StrokeWidth = 1;
 
-            for ( auto const & Polygon : polygons_ ) {
-                if ( Polygon.size() < 2 ) continue;
-                auto LPathBuilder = SkPathBuilder();
-                LPathBuilder->MoveTo( Polygon[0].X, Polygon[0].Y );
-                for ( std::size_t i = 1; i < Polygon.size(); ++i ) {
-                    LPathBuilder->LineTo( Polygon[i].X, Polygon[i].Y );
+            for ( auto const & Group : polygons_ ) {
+                if ( Filled ) {
+                    auto LPathBuilder =
+                        SkPathBuilder( TSkPathFillType::EvenOdd );
+                    for ( auto const & Ring : Group ) {
+                        if ( Ring.size() < 2 ) continue;
+                        LPathBuilder->MoveTo( Ring[0].X, Ring[0].Y );
+                        for ( std::size_t i = 1; i < Ring.size(); ++i ) {
+                            LPathBuilder->LineTo( Ring[i].X, Ring[i].Y );
+                        }
+                        LPathBuilder->Close();
+                    }
+                    auto LPath = LPathBuilder->Detach();
+                    ACanvas->DrawPath( LPath, LFillPaint );
+                    ACanvas->DrawPath( LPath, LPaint );
                 }
-                LPathBuilder->Close();
-                ACanvas->DrawPath( LPathBuilder->Detach(), LPaint );
+                else {
+                    for ( auto const & Ring : Group ) {
+                        if ( Ring.size() < 2 ) continue;
+                        auto LPathBuilder = SkPathBuilder();
+                        LPathBuilder->MoveTo( Ring[0].X, Ring[0].Y );
+                        for ( std::size_t i = 1; i < Ring.size(); ++i ) {
+                            LPathBuilder->LineTo( Ring[i].X, Ring[i].Y );
+                        }
+                        LPathBuilder->Close();
+                        ACanvas->DrawPath( LPathBuilder->Detach(), LPaint );
+                    }
+                }
             }
         }, true );
 

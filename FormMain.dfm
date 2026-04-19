@@ -292,6 +292,15 @@ object frmMain: TfrmMain
       TabOrder = 2
       OnChange = comboboxAreaMethodChange
     end
+    object checkboxFillArea: TCheckBox
+      Left = 503
+      Top = 26
+      Width = 77
+      Height = 17
+      Caption = 'Fill Area'
+      TabOrder = 3
+      OnClick = checkboxFillAreaClick
+    end
   end
   object ActionList1: TActionList
     Left = 208

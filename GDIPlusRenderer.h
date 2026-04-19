@@ -21,8 +21,9 @@ protected:
     virtual void DoPrepareRendering( IModel const & Model, int OfsX, int OfsY ) override;
     virtual void DoRender( Vcl::Graphics::TCanvas& Canvas ) const override;
 private:
-    using Polygon = std::vector<Gdiplus::PointF>;
-    using PolygonCont = std::vector<Polygon>;
+    using Ring = std::vector<Gdiplus::PointF>;
+    using PolygonGroup = std::vector<Ring>;
+    using PolygonCont = std::vector<PolygonGroup>;
 
     PolygonCont polygons_;
 };

@@ -375,7 +375,15 @@ void __fastcall TfrmMain::pnlViewportResize(TObject *Sender)
 void __fastcall TfrmMain::comboboxRendererChange(TObject *Sender)
 {
     renderer_ = std::move( MakeRender() );
+    renderer_->SetFilled( checkboxFillArea->Checked );
     Render();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TfrmMain::checkboxFillAreaClick(TObject *Sender)
+{
+    renderer_->SetFilled( checkboxFillArea->Checked );
+    InvalidateViewport();
 }
 //---------------------------------------------------------------------------
 

@@ -67,6 +67,7 @@ __published:	// IDE-managed Components
     TLabel *Label2;
     TLabel *lblCoords;
     TLabel *lblBoundingBox;
+    TCheckBox *checkboxFillArea;
     void __fastcall paintboxViewportPaint(TObject *Sender);
     void __fastcall TextChanged(TObject *Sender);
     void __fastcall edtTextSizeKeyPress(TObject *Sender, System::WideChar &Key);
@@ -83,6 +84,7 @@ __published:	// IDE-managed Components
     void __fastcall comboboxAreaMethodChange(TObject *Sender);
     void __fastcall FormKeyPress(TObject *Sender, System::WideChar &Key);
     void __fastcall paintboxViewportMouseLeave(TObject *Sender);
+    void __fastcall checkboxFillAreaClick(TObject *Sender);
 
 public:		// User declarations
     __fastcall TfrmMain( TComponent* Owner ) override;
