@@ -17,11 +17,7 @@ public:
         Gdiplus::GdiplusStartup( &gdiplusToken_, &gdiplusStartupInput_, NULL );
     }
     ~GdiPlusSessionManager() {
-        try {
-            Gdiplus::GdiplusShutdown( gdiplusToken_ );
-        }
-        catch ( ... ) {
-        }
+        Gdiplus::GdiplusShutdown( gdiplusToken_ );
     }
     GdiPlusSessionManager( GdiPlusSessionManager const & ) = delete;
     GdiPlusSessionManager& operator=( GdiPlusSessionManager const & ) = delete;
