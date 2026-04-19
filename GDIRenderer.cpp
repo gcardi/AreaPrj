@@ -16,16 +16,16 @@
 
 namespace AreaPrj {
 
-void GDIRenderer::DoPrepareRendering( IModel const & Model )
+void GDIRenderer::DoPrepareRendering( IModel const & Model, int OfsX, int OfsY )
 {
     auto& Polygons = Model.GetPolygons();
 
     PolygonCont GdiPolygons;
 
     for ( auto const & Pol : Polygons ) {
-        GdiPolygons.push_back( ToGDIPolygon<Polygon>( Pol.outer() ) );
+        GdiPolygons.push_back( ToGDIPolygon<Polygon>( Pol.outer(), OfsX, OfsY ) );
         for ( auto const & RingInner : Pol.inners() ) {
-            GdiPolygons.push_back( ToGDIPolygon<Polygon>( RingInner ) );
+            GdiPolygons.push_back( ToGDIPolygon<Polygon>( RingInner, OfsX, OfsY ) );
         }
     }
 

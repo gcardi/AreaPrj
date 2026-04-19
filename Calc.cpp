@@ -150,7 +150,7 @@ inline RingTerminator ReadRing( TIt& ti, PIt& pi, TIt te, Ring& R, bool IsOuter 
 }
 
 void Calc::DoSetText( String Val, String FontName, double FontSize,
-                      double DX, double DY, bool Bold, bool Italic )
+                      bool Bold, bool Italic )
 {
     // Usando GDI+, converte il testo in primitive grafiche
     // (poligoni/ring) e le scrive nel modello
@@ -179,7 +179,7 @@ void Calc::DoSetText( String Val, String FontName, double FontSize,
           :
             FontStyle::FontStyleRegular,
         FontSize,
-        Gdiplus::PointF( DX, DY ),
+        Gdiplus::PointF( 0, 0 ),
         &sf
     );
     GPath.CloseFigure();

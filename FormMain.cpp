@@ -199,7 +199,7 @@ void TfrmMain::InvalidateViewport()
 
 void TfrmMain::Render()
 {
-    renderer_->PrepareRendering( GetModel() );
+    renderer_->PrepareRendering( GetModel(), ofsX_, ofsY_ );
     InvalidateViewport();
 }
 //---------------------------------------------------------------------------
@@ -286,7 +286,7 @@ void TfrmMain::UpdateModel()
     if ( IsInputDataValid() ) {
         GetController().SetText(
             IView::GetText(), // IView:: to resolve the ambiguity with Vcl::Controls::TControl
-            GetFontName(), TextSize, ofsX_, ofsY_, GetBold(), GetItalic()
+            GetFontName(), TextSize, GetBold(), GetItalic()
         );
         UpdateBoundingBoxValues();
     }
@@ -312,7 +312,7 @@ void __fastcall TfrmMain::edtTextSizeKeyPress(TObject *Sender, System::WideChar 
 
 bool TfrmMain::HitTest( int X, int Y ) const
 {
-    return GetModel().HitTest( X, Y );
+    return GetModel().HitTest( X - ofsX_, Y - ofsY_ );
 }
 //---------------------------------------------------------------------------
 
@@ -336,7 +336,7 @@ void __fastcall TfrmMain::paintboxViewportMouseMove(TObject *Sender, TShiftState
     if ( dragging_ ) {
         ofsX_ = X - startX_;
         ofsY_ = Y - startY_;
-        UpdateModel();
+        Render();
     }
     else {
         paintboxViewport->Cursor = HitTest( X, Y ) ? crHandPoint : crCross;
@@ -370,8 +370,7 @@ void __fastcall TfrmMain::pnlViewportResize(TObject *Sender)
 void __fastcall TfrmMain::comboboxRendererChange(TObject *Sender)
 {
     renderer_ = std::move( MakeRender() );
-    renderer_->PrepareRendering( GetModel() );
-    InvalidateViewport();
+    Render();
 }
 //---------------------------------------------------------------------------
 
@@ -440,7 +439,7 @@ void TfrmMain::CancelTextDrag()
     ofsX_ = oldOfsX_;
     ofsY_ = oldOfsY_;
     dragging_ = false;
-    UpdateModel();
+    Render();
 }
 //---------------------------------------------------------------------------
 
@@ -463,7 +462,7 @@ void TfrmMain::DoPan( int Dx, int Dy )
     if ( !dragging_ ) {
         ofsX_ += Dx;
         ofsY_ += Dy;
-        UpdateModel();
+        Render();
     }
 }
 //---------------------------------------------------------------------------

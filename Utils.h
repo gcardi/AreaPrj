@@ -15,7 +15,7 @@ extern std::unique_ptr<TStringList> RetrieveFontList();
 
 // Helper per convertire un Ring di boost.geomerty in un vector di punti GDI
 template<typename R, typename T>
-R ToGDIPolygon( T const & Ring )
+R ToGDIPolygon( T const & Ring, double OfsX = 0, double OfsY = 0 )
 {
     R GDIPoly;
 
@@ -24,8 +24,8 @@ R ToGDIPolygon( T const & Ring )
     std::transform(
         std::begin( Ring ), end( Ring ),
         std::back_inserter( GDIPoly ),
-        []( auto & Pt ) {
-            return typename R::value_type( Pt.x(), Pt.y() );
+        [OfsX, OfsY]( auto & Pt ) {
+            return typename R::value_type( Pt.x() + OfsX, Pt.y() + OfsY );
         }
     );
     return GDIPoly;

@@ -18,7 +18,7 @@ public:
     static constexpr LPCTSTR GetDescription() { return _D( "GDI+" ); }
 protected:
     virtual String DoGetName() const override { return GetDescription(); }
-    virtual void DoPrepareRendering( IModel const & Model ) override;
+    virtual void DoPrepareRendering( IModel const & Model, int OfsX, int OfsY ) override;
     virtual void DoRender( Vcl::Graphics::TCanvas& Canvas ) const override;
 private:
     using Polygon = std::vector<Gdiplus::PointF>;
