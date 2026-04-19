@@ -20,6 +20,10 @@ namespace AreaPrj {
 unique_ptr<TStringList> RetrieveFontList()
 {
     auto SL = make_unique<TStringList>();
+    SL->Sorted = true;
+    SL->Duplicates = System::Types::dupIgnore;
+    SL->CaseSensitive = false;
+
     LOGFONT LFont {};
 
     class DCMngr {
@@ -34,21 +38,14 @@ unique_ptr<TStringList> RetrieveFontList()
     LFont.lfCharSet = DEFAULT_CHARSET;
 
     struct EnumFontFamExProc {
-        static int WINAPI Proc( LOGFONT const * Elfe, TEXTMETRIC const * Tme,
+        static int WINAPI Proc( LOGFONT const * Elfe, TEXTMETRIC const * /*Tme*/,
                                 DWORD FontType, LPARAM LParam )
         {
-			//String const FN{ Elfe->lfFaceName };
-			//::OutputDebugString( Format( _D( "%s, 0x%08X" ), ARRAYOFCONST(( FN, FontType )) ).c_str() );
-			if ( FontType & ( TRUETYPE_FONTTYPE | DEVICE_FONTTYPE ) ) {
-				auto SL = reinterpret_cast<TStringList*>( LParam );
-				String const FontName{ Elfe->lfFaceName };
-				if ( !SL->Count ||
-                     (
-                       !SameText( FontName, SL->Strings[SL->Count-1] ) &&
-					   !FontName.IsEmpty() && FontName[1] != _D( '@' )
-                     )
-                ) {
-                    SL->Append( FontName );
+            if ( FontType & ( TRUETYPE_FONTTYPE | DEVICE_FONTTYPE ) ) {
+                String const FontName{ Elfe->lfFaceName };
+                if ( !FontName.IsEmpty() && FontName[1] != _D( '@' ) ) {
+                    auto SL = reinterpret_cast<TStringList*>( LParam );
+                    SL->Add( FontName );
                 }
             }
             return TRUE;
@@ -59,8 +56,6 @@ unique_ptr<TStringList> RetrieveFontList()
         DC.get(), &LFont, &EnumFontFamExProc::Proc,
         reinterpret_cast<LONG_PTR>( SL.get() ), {}
     );
-
-    SL->Sort();
 
     return SL;
 }
