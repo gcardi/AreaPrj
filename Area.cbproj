@@ -268,6 +268,10 @@
             <DependentOn>SKIARenderer.h</DependentOn>
             <BuildOrder>13</BuildOrder>
         </CppCompile>
+        <CppCompile Include="Direct2DRenderer.cpp">
+            <DependentOn>Direct2DRenderer.h</DependentOn>
+            <BuildOrder>14</BuildOrder>
+        </CppCompile>
         <CppCompile Include="Geometrie.cpp">
             <DependentOn>Geometrie.h</DependentOn>
             <BuildOrder>3</BuildOrder>

@@ -15,6 +15,7 @@
 
 #include "GDIRenderer.h"
 #include "GDIPlusRenderer.h"
+#include "Direct2DRenderer.h"
 #include "SKIARenderer.h"
 #include "Utils.h"
 #include "PolynomialAreaCalc.h"
@@ -43,6 +44,7 @@ using AreaPrj::IRenderer;
 using AreaPrj::RetrieveFontList;
 using AreaPrj::GDIRenderer;
 using AreaPrj::GDIPlusRenderer;
+using AreaPrj::Direct2DRenderer;
 using AreaPrj::SKIARenderer;
 using AreaPrj::PolynomialAreaCalc;
 using AreaPrj::StochasticAreaCalc;
@@ -56,7 +58,7 @@ using boost::geometry::model::box;
 namespace {
 
 enum class AreaMethodKind { Polynomial, Stochastic, StochasticMT };
-enum class RendererKind   { GDI, GDIPlus, Skia };
+enum class RendererKind   { GDI, GDIPlus, Direct2D, Skia };
 
 // Pack an enum value into a TObject* slot so that each ComboBox item
 // carries its own dispatch tag, decoupling display order from the factory.
@@ -175,8 +177,9 @@ std::unique_ptr<TStringList> TfrmMain::GetRendererNameList()
 {
     auto SL = make_unique<TStringList>();
     SL->AddObject( GDIRenderer::GetDescription(),     ToTag( RendererKind::GDI ) );
-    SL->AddObject( GDIPlusRenderer::GetDescription(), ToTag( RendererKind::GDIPlus ) );
-    SL->AddObject( SKIARenderer::GetDescription(),    ToTag( RendererKind::Skia ) );
+    SL->AddObject( GDIPlusRenderer::GetDescription(),   ToTag( RendererKind::GDIPlus ) );
+    SL->AddObject( Direct2DRenderer::GetDescription(),  ToTag( RendererKind::Direct2D ) );
+    SL->AddObject( SKIARenderer::GetDescription(),      ToTag( RendererKind::Skia ) );
     return SL;
 }
 //---------------------------------------------------------------------------
@@ -187,6 +190,8 @@ std::unique_ptr<IRenderer> TfrmMain::MakeRender() const
     switch ( GetItemKind( *comboboxRenderer, RendererKind::GDI ) ) {
         case RendererKind::GDIPlus:
             return make_unique<GDIPlusRenderer>();
+        case RendererKind::Direct2D:
+            return make_unique<Direct2DRenderer>();
         case RendererKind::Skia:
             return make_unique<SKIARenderer>();
         case RendererKind::GDI:
