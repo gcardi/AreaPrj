@@ -264,6 +264,10 @@
             <DependentOn>GDIRenderer.h</DependentOn>
             <BuildOrder>12</BuildOrder>
         </CppCompile>
+        <CppCompile Include="SKIARenderer.cpp">
+            <DependentOn>SKIARenderer.h</DependentOn>
+            <BuildOrder>13</BuildOrder>
+        </CppCompile>
         <CppCompile Include="Geometrie.cpp">
             <DependentOn>Geometrie.h</DependentOn>
             <BuildOrder>3</BuildOrder>
