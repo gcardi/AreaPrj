@@ -13,6 +13,7 @@ object frmMain: TfrmMain
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OnKeyPress = FormKeyPress
   TextHeight = 13
   object pnlViewport: TPanel
