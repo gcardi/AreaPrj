@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(cmd.exe //c \".\\\\\\\\_build_tmp.bat Build\")"
+    ]
+  }
+}
