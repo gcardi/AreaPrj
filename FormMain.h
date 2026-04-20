@@ -16,6 +16,8 @@
 
 #include "anafestica/PersistFormVCL.h"
 #include "anafestica/CfgRegistrySingleton.h"
+#include <Vcl.ComCtrls.hpp>
+#include "FrameTextData.h"
 
 #include <memory>
 
@@ -35,6 +37,8 @@ class TMIfrmMain : public TForm, public AreaPrj::IView, public AreaPrj::IObserve
 public:
     template<typename...A>
     TMIfrmMain( A&&... Args ) : TForm( std::forward<A>( Args )... ) {}
+protected:
+    INTFOBJECT_IMPL_IUNKNOWN(TForm)
 };
 
 class TfrmMain : public TMIfrmMain
@@ -42,12 +46,6 @@ class TfrmMain : public TMIfrmMain
 __published:	// IDE-managed Components
     TPaintBox *paintboxViewport;
     TPanel *pnlViewport;
-    TEdit *edtText;
-    TLabel *Label1;
-    TComboBox *comboboxFontName;
-    TLabel *Label3;
-    TEdit *edtTextSize;
-    TLabel *Label4;
     TLabel *lblHitTest;
     TLabel *Label5;
     TLabel *Label6;
@@ -56,8 +54,6 @@ __published:	// IDE-managed Components
     TLabel *lblHeight;
     TComboBox *comboboxRenderer;
     TLabel *Label7;
-    TCheckBox *checkboxBold;
-    TCheckBox *checkboxItalic;
     TPanel *Panel1;
     TPanel *Panel2;
     TActionList *ActionList1;
@@ -68,9 +64,10 @@ __published:	// IDE-managed Components
     TLabel *lblCoords;
     TLabel *lblBoundingBox;
     TCheckBox *checkboxFillArea;
+    TPageControl *pagecontrolProperties;
+    TTabSheet *tbshtText;
+    TfrmeTextData *frmeTextData1;
     void __fastcall paintboxViewportPaint(TObject *Sender);
-    void __fastcall TextChanged(TObject *Sender);
-    void __fastcall edtTextSizeKeyPress(TObject *Sender, System::WideChar &Key);
     void __fastcall paintboxViewportMouseMove(TObject *Sender, TShiftState Shift,
           int X, int Y);
     void __fastcall pnlViewportResize(TObject *Sender);
@@ -97,16 +94,6 @@ protected:
     virtual void DoNotify() override { Render(); }
 
     // IView
-    virtual String DoGetText() const override;
-    virtual void DoSetText( String Val ) override;
-    virtual String DoGetFontName() const override;
-    virtual void DoSetFontName( String Val ) override;
-    virtual double DoGetTextSize() const override;
-    virtual void DoSetTextSize( double Val ) override;
-    virtual bool DoGetBold() const override;
-    virtual void DoSetBold( bool Val ) override;
-    virtual bool DoGetItalic() const override;
-    virtual void DoSetItalic( bool Val ) override;
     virtual void DoPan( int Dx, int Dy ) override;
     virtual AreaPrj::IModel const & DoGetModel() const override;
 

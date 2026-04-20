@@ -60,5 +60,18 @@ unique_ptr<TStringList> RetrieveFontList()
     return SL;
 }
 
+// Invariant format settings: the text-size field must round-trip the same
+// way regardless of the user's Windows regional decimal separator.
+TFormatSettings const & InvariantFmt()
+{
+    static TFormatSettings const Fmt = []{
+        TFormatSettings f = TFormatSettings::Create();
+        f.DecimalSeparator = L'.';
+        f.ThousandSeparator = L',';
+        return f;
+    }();
+    return Fmt;
+}
+
 } // End of namespace AreaPrj
 

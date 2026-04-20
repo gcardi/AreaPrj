@@ -31,6 +31,8 @@ R ToGDIPolygon( T const & Ring, double OfsX = 0, double OfsY = 0 )
     return GDIPoly;
 }
 
+extern TFormatSettings const & InvariantFmt();
+
 } // End of namespace AreaPrj
 
 //---------------------------------------------------------------------------

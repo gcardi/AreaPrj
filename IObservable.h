@@ -1,11 +1,14 @@
 #ifndef IObservableH
 #define IObservableH
 
+#include <System.hpp>
+
 namespace AreaPrj {
 
 class IObserver;
 
 class IObservable {
+public:
 public:
     virtual ~IObservable() = default;
     void AddObserver( IObserver& Item ) { DoAddObserver( Item ); }

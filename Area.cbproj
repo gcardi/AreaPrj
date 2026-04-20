@@ -211,6 +211,13 @@
             <DependentOn>FormMain.h</DependentOn>
             <BuildOrder>2</BuildOrder>
         </CppCompile>
+        <CppCompile Include="FrameTextData.cpp">
+            <Form>frmeTextData</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+            <DependentOn>FrameTextData.h</DependentOn>
+            <BuildOrder>23</BuildOrder>
+        </CppCompile>
         <CppCompile Include="GDIPlusRenderer.cpp">
             <DependentOn>GDIPlusRenderer.h</DependentOn>
             <BuildOrder>15</BuildOrder>
@@ -230,6 +237,10 @@
         <None Include="IController.h">
             <VirtualFolder>{04150546-B3D4-483A-8E85-B656593EE4C9}</VirtualFolder>
             <BuildOrder>6</BuildOrder>
+        </None>
+        <None Include="IFontProperties.h">
+            <VirtualFolder>{04150546-B3D4-483A-8E85-B656593EE4C9}</VirtualFolder>
+            <BuildOrder>24</BuildOrder>
         </None>
         <None Include="IModel.h">
             <VirtualFolder>{04150546-B3D4-483A-8E85-B656593EE4C9}</VirtualFolder>
@@ -277,6 +288,7 @@
             <BuildOrder>14</BuildOrder>
         </CppCompile>
         <FormResources Include="FormMain.dfm"/>
+        <FormResources Include="FrameTextData.dfm"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

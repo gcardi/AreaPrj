@@ -7,6 +7,7 @@ namespace AreaPrj {
 
 class IObserver : public IUnknown {
 public:
+/*
     // These three stupid methods are needed to get rid of even more stupid
     // warnings from the Embarcadero clang compilers that claim that the
     // classes that a form derives from and that have an 'I' at the beginning
@@ -17,7 +18,7 @@ public:
     virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, void ** ppvObject) override { return {}; }
     virtual ULONG   STDMETHODCALLTYPE AddRef() override { return {}; }
     virtual ULONG   STDMETHODCALLTYPE Release() override { return {}; }
-
+*/
     void Notify() { DoNotify(); }
 protected:
     virtual void DoNotify() = 0;

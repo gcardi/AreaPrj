@@ -28,6 +28,7 @@
 //---------------------------------------------------------------------------
 
 #pragma package(smart_init)
+#pragma link "FrameTextData"
 #pragma resource "*.dfm"
 TfrmMain *frmMain;
 
@@ -37,11 +38,10 @@ using std::begin;
 using std::end;
 using std::back_inserter;
 using std::make_unique;
-using std::max;
+//using std::max;
 using std::thread;
 
 using AreaPrj::IRenderer;
-using AreaPrj::RetrieveFontList;
 using AreaPrj::GDIRenderer;
 using AreaPrj::GDIPlusRenderer;
 using AreaPrj::Direct2DRenderer;
@@ -49,13 +49,12 @@ using AreaPrj::SKIARenderer;
 using AreaPrj::PolynomialAreaCalc;
 using AreaPrj::StochasticAreaCalc;
 using AreaPrj::StochasticMTAreaCalc;
+using AreaPrj::InvariantFmt;
 
 using boost::geometry::envelope;
 using boost::geometry::model::box;
 
 //---------------------------------------------------------------------------
-
-namespace {
 
 enum class AreaMethodKind { Polynomial, Stochastic, StochasticMT };
 enum class RendererKind   { GDI, GDIPlus, Direct2D, Skia };
@@ -82,21 +81,6 @@ E GetItemKind( TComboBox& Cb, E Fallback )
         reinterpret_cast<intptr_t>( Items.Objects[Idx] )
     );
 }
-
-// Invariant format settings: the text-size field must round-trip the same
-// way regardless of the user's Windows regional decimal separator.
-TFormatSettings const & InvariantFmt()
-{
-    static TFormatSettings const Fmt = []{
-        TFormatSettings f = TFormatSettings::Create();
-        f.DecimalSeparator = L'.';
-        f.ThousandSeparator = L',';
-        return f;
-    }();
-    return Fmt;
-}
-
-} // end anonymous namespace
 
 //---------------------------------------------------------------------------
 
@@ -127,16 +111,14 @@ __fastcall TfrmMain::TfrmMain(TComponent* Owner)
 {
     pnlViewport->ControlStyle = pnlViewport->ControlStyle << csOpaque;
 
-    comboboxFontName->Items->Assign( RetrieveFontList().get() );
-    comboboxFontName->ItemIndex =
-        max( comboboxFontName->Items->IndexOf( Font->Name ), 0 );
-    GetController().AddObserverToModel( *this );
-
     comboboxAreaMethod->Items->Assign( GetAreaMethodNameList().get() );
     comboboxAreaMethod->ItemIndex = 0;
 
     comboboxRenderer->Items->Assign( GetRendererNameList().get() );
     comboboxRenderer->ItemIndex = 0;
+    /*
+    */
+    GetController().AddObserverToModel( *this );
 
     UpdateModel();
 }
@@ -231,72 +213,28 @@ void __fastcall TfrmMain::paintboxViewportPaint( TObject *Sender )
     }
 }
 //---------------------------------------------------------------------------
-
-String TfrmMain::DoGetText() const
-{
-    return edtText->Text;
-}
-//---------------------------------------------------------------------------
-
-void TfrmMain::DoSetText( String Val )
-{
-    if ( Val != edtText->Text ) {
-        edtText->Text = Val;
-        UpdateModel();
-    }
-}
-//---------------------------------------------------------------------------
-
-String TfrmMain::DoGetFontName() const
-{
-    return comboboxFontName->Text;
-}
-//---------------------------------------------------------------------------
-
-void TfrmMain::DoSetFontName( String Val )
-{
-    if ( Val != comboboxFontName->Text ) {
-        comboboxFontName->Text = Val;
-        UpdateModel();
-    }
-}
-//---------------------------------------------------------------------------
-
-double TfrmMain::DoGetTextSize() const
-{
-    return StrToFloat( edtTextSize->Text, InvariantFmt() );
-}
-//---------------------------------------------------------------------------
-
-void TfrmMain::DoSetTextSize( double Val )
-{
-    if ( StrToFloat( edtTextSize->Text, InvariantFmt() ) != Val ) {
-        edtTextSize->Text = Format(
-            _D( "%g" ),
-            ARRAYOFCONST(( static_cast<long double>( Val ) )),
-            InvariantFmt()
-        );
-        UpdateModel();
-    }
-}
-//---------------------------------------------------------------------------
-
+/*
 void __fastcall TfrmMain::TextChanged(TObject *Sender)
 {
     UpdateModel();
 }
-//---------------------------------------------------------------------------
-
+*/
 
 void TfrmMain::UpdateModel()
 {
-    auto TextSize = StrToFloatDef( edtTextSize->Text, -1.0, InvariantFmt() );
+    //auto TextSize = StrToFloatDef( edtTextSize->Text, -1.0, InvariantFmt() );
+    auto TextSize = 40.0;
+
     // Validate Input Data
     inputDataValid_ = TextSize < 1000.0 && TextSize > 0.0;
     if ( IsInputDataValid() ) {
         GetController().SetText(
-            IView::GetText(), // IView:: to resolve the ambiguity with Vcl::Controls::TControl
-            GetFontName(), TextSize, GetBold(), GetItalic()
+            //IView::GetText(), // IView:: to resolve the ambiguity with Vcl::Controls::TControl
+            _D( "PROVA" )
+          , _D( "Arial" )   //GetFontName(),
+          , TextSize
+          , false           //GetBold(),
+          , false           // GetItalic()
         );
         UpdateBoundingBoxValues();
     }
@@ -307,18 +245,6 @@ void TfrmMain::UpdateModel()
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TfrmMain::edtTextSizeKeyPress(TObject *Sender, System::WideChar &Key)
-{
-    switch ( Key ) {
-        case VK_RETURN:
-            UpdateModel();
-            Key = 0;
-            break;
-        default:
-            break;
-    }
-}
-//---------------------------------------------------------------------------
 
 bool TfrmMain::HitTest( int X, int Y ) const
 {
@@ -389,36 +315,6 @@ void __fastcall TfrmMain::checkboxFillAreaClick(TObject *Sender)
 {
     renderer_->SetFilled( checkboxFillArea->Checked );
     InvalidateViewport();
-}
-//---------------------------------------------------------------------------
-
-bool TfrmMain::DoGetBold() const
-{
-    return checkboxBold->Checked;
-}
-//---------------------------------------------------------------------------
-
-void TfrmMain::DoSetBold( bool Val )
-{
-    if ( checkboxBold->Checked != Val ) {
-        checkboxBold->Checked = Val;
-        UpdateModel();
-    }
-}
-//---------------------------------------------------------------------------
-
-bool TfrmMain::DoGetItalic() const
-{
-    return checkboxItalic->Checked;
-}
-//---------------------------------------------------------------------------
-
-void TfrmMain::DoSetItalic( bool Val )
-{
-    if ( checkboxItalic->Checked != Val ) {
-        checkboxItalic->Checked = Val;
-        UpdateModel();
-    }
 }
 //---------------------------------------------------------------------------
 
@@ -499,7 +395,9 @@ void __fastcall TfrmMain::paintboxViewportMouseLeave(TObject *Sender)
 
 void TfrmMain::UpdateBoundingBoxValues()
 {
-    if ( !IView::GetText().IsEmpty() ) {
+
+//    if ( !IView::GetText().IsEmpty() ) {
+    if (true) {
         box<AreaPrj::IModel::PointType> BoundingBox;
         envelope( GetModel().GetPolygons(), BoundingBox );
         lblBoundingBox->Caption =
@@ -520,4 +418,18 @@ void TfrmMain::ClearBoundingBoxValues()
     lblBoundingBox->Caption = {};
 }
 //---------------------------------------------------------------------------
+
+/*
+void __fastcall TfrmMain::edtTextSizeKeyPress(TObject *Sender, System::WideChar &Key)
+{
+    switch ( Key ) {
+        case VK_RETURN:
+            UpdateModel();
+            Key = 0;
+            break;
+        default:
+            break;
+    }
+}
+*/
 

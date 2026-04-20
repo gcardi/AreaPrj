@@ -17,11 +17,10 @@ object frmMain: TfrmMain
   OnKeyPress = FormKeyPress
   TextHeight = 13
   object pnlViewport: TPanel
-    AlignWithMargins = True
-    Left = 16
-    Top = 130
-    Width = 686
-    Height = 303
+    Left = 0
+    Top = 129
+    Width = 718
+    Height = 320
     Margins.Left = 16
     Margins.Top = 16
     Margins.Right = 16
@@ -32,14 +31,18 @@ object frmMain: TfrmMain
     ShowCaption = False
     TabOrder = 0
     OnResize = pnlViewportResize
+    ExplicitLeft = 16
+    ExplicitTop = 130
+    ExplicitWidth = 686
+    ExplicitHeight = 303
     DesignSize = (
-      686
-      303)
+      718
+      320)
     object paintboxViewport: TPaintBox
       Left = 1
       Top = 1
-      Width = 684
-      Height = 301
+      Width = 716
+      Height = 318
       Cursor = crCross
       Align = alClient
       OnMouseDown = paintboxViewportMouseDown
@@ -52,8 +55,8 @@ object frmMain: TfrmMain
       ExplicitHeight = 198
     end
     object lblHitTest: TLabel
-      Left = 657
-      Top = 281
+      Left = 689
+      Top = 298
       Width = 5
       Height = 13
       Anchors = [akRight, akBottom]
@@ -68,8 +71,8 @@ object frmMain: TfrmMain
       ExplicitTop = 251
     end
     object Label5: TLabel
-      Left = 639
-      Top = 281
+      Left = 671
+      Top = 298
       Width = 16
       Height = 13
       Alignment = taRightJustify
@@ -122,7 +125,7 @@ object frmMain: TfrmMain
     end
     object lblCoords: TLabel
       Left = 9
-      Top = 281
+      Top = 298
       Width = 3
       Height = 13
       Anchors = [akLeft, akBottom]
@@ -135,7 +138,7 @@ object frmMain: TfrmMain
       ExplicitTop = 178
     end
     object lblBoundingBox: TLabel
-      Left = 675
+      Left = 707
       Top = 11
       Width = 3
       Height = 13
@@ -146,160 +149,157 @@ object frmMain: TfrmMain
   end
   object Panel1: TPanel
     Left = 0
-    Top = 51
+    Top = 0
     Width = 718
-    Height = 63
+    Height = 129
     Align = alTop
     BevelOuter = bvNone
     Caption = 'pnlText'
     ShowCaption = False
     TabOrder = 1
-    DesignSize = (
-      718
-      63)
-    object Label1: TLabel
-      Left = 19
-      Top = 9
-      Width = 22
-      Height = 13
-      Caption = 'Text'
-    end
-    object Label3: TLabel
-      Left = 356
-      Top = 9
-      Width = 22
-      Height = 13
-      Anchors = [akTop, akRight]
-      Caption = 'Font'
-      ExplicitLeft = 188
-    end
-    object Label4: TLabel
-      Left = 549
-      Top = 9
-      Width = 31
-      Height = 13
-      Anchors = [akTop, akRight]
-      Caption = 'Height'
-      ExplicitLeft = 381
-    end
-    object checkboxBold: TCheckBox
-      Left = 627
-      Top = 13
-      Width = 71
-      Height = 17
-      Anchors = [akTop, akRight]
-      Caption = 'Bold'
+    object Panel2: TPanel
+      Left = 0
+      Top = 0
+      Width = 718
+      Height = 51
+      Align = alTop
+      BevelOuter = bvNone
+      Caption = 'Panel2'
+      ShowCaption = False
       TabOrder = 0
-      OnClick = TextChanged
+      DesignSize = (
+        718
+        51)
+      object Label7: TLabel
+        Left = 608
+        Top = 9
+        Width = 32
+        Height = 13
+        Anchors = [akTop, akRight]
+        Caption = 'Viewer'
+        ExplicitLeft = 440
+      end
+      object Label2: TLabel
+        Left = 114
+        Top = 9
+        Width = 36
+        Height = 13
+        Caption = 'Method'
+      end
+      object Button1: TButton
+        Left = 17
+        Top = 22
+        Width = 75
+        Height = 25
+        Action = actArea
+        TabOrder = 0
+      end
+      object comboboxRenderer: TComboBox
+        Left = 606
+        Top = 24
+        Width = 96
+        Height = 21
+        Style = csDropDownList
+        Anchors = [akTop, akRight]
+        TabOrder = 1
+        OnChange = comboboxRendererChange
+      end
+      object comboboxAreaMethod: TComboBox
+        Left = 112
+        Top = 24
+        Width = 137
+        Height = 21
+        Style = csDropDownList
+        TabOrder = 2
+        OnChange = comboboxAreaMethodChange
+      end
+      object checkboxFillArea: TCheckBox
+        Left = 503
+        Top = 26
+        Width = 77
+        Height = 17
+        Caption = 'Fill Area'
+        TabOrder = 3
+        OnClick = checkboxFillAreaClick
+      end
     end
-    object checkboxItalic: TCheckBox
-      Left = 627
-      Top = 36
-      Width = 57
-      Height = 17
-      Anchors = [akTop, akRight]
-      Caption = 'Italic'
+    object pagecontrolProperties: TPageControl
+      AlignWithMargins = True
+      Left = 16
+      Top = 54
+      Width = 686
+      Height = 67
+      Margins.Left = 16
+      Margins.Right = 16
+      Margins.Bottom = 8
+      Align = alClient
       TabOrder = 1
-      OnClick = TextChanged
-    end
-    object comboboxFontName: TComboBox
-      Left = 354
-      Top = 24
-      Width = 173
-      Height = 21
-      Style = csDropDownList
-      Anchors = [akTop, akRight]
-      TabOrder = 2
-      OnChange = TextChanged
-    end
-    object edtText: TEdit
-      Left = 17
-      Top = 24
-      Width = 317
-      Height = 21
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 3
-      Text = 'OqgAW'
-      OnChange = TextChanged
-    end
-    object edtTextSize: TEdit
-      Left = 547
-      Top = 24
-      Width = 65
-      Height = 21
-      Alignment = taRightJustify
-      Anchors = [akTop, akRight]
-      NumbersOnly = True
-      TabOrder = 4
-      Text = '180'
-      OnExit = TextChanged
-      OnKeyPress = edtTextSizeKeyPress
-    end
-  end
-  object Panel2: TPanel
-    Left = 0
-    Top = 0
-    Width = 718
-    Height = 51
-    Align = alTop
-    BevelOuter = bvNone
-    Caption = 'Panel2'
-    ShowCaption = False
-    TabOrder = 2
-    DesignSize = (
-      718
-      51)
-    object Label7: TLabel
-      Left = 608
-      Top = 9
-      Width = 32
-      Height = 13
-      Anchors = [akTop, akRight]
-      Caption = 'Viewer'
-      ExplicitLeft = 440
-    end
-    object Label2: TLabel
-      Left = 114
-      Top = 9
-      Width = 36
-      Height = 13
-      Caption = 'Method'
-    end
-    object Button1: TButton
-      Left = 17
-      Top = 22
-      Width = 75
-      Height = 25
-      Action = actArea
-      TabOrder = 0
-    end
-    object comboboxRenderer: TComboBox
-      Left = 606
-      Top = 24
-      Width = 96
-      Height = 21
-      Style = csDropDownList
-      Anchors = [akTop, akRight]
-      TabOrder = 1
-      OnChange = comboboxRendererChange
-    end
-    object comboboxAreaMethod: TComboBox
-      Left = 112
-      Top = 24
-      Width = 137
-      Height = 21
-      Style = csDropDownList
-      TabOrder = 2
-      OnChange = comboboxAreaMethodChange
-    end
-    object checkboxFillArea: TCheckBox
-      Left = 503
-      Top = 26
-      Width = 77
-      Height = 17
-      Caption = 'Fill Area'
-      TabOrder = 3
-      OnClick = checkboxFillAreaClick
+      object tbshtText: TTabSheet
+        Caption = 'tbshtText'
+        TabVisible = False
+        inline frmeTextData1: TfrmeTextData
+          Left = 0
+          Top = 0
+          Width = 678
+          Height = 57
+          Align = alClient
+          TabOrder = 0
+          inherited Label3: TLabel
+            Left = 342
+            Width = 22
+            Height = 13
+            StyleElements = [seFont, seClient, seBorder]
+            ExplicitLeft = 301
+            ExplicitWidth = 22
+            ExplicitHeight = 13
+          end
+          inherited Label1: TLabel
+            Width = 22
+            Height = 13
+            StyleElements = [seFont, seClient, seBorder]
+            ExplicitWidth = 22
+            ExplicitHeight = 13
+          end
+          inherited Label4: TLabel
+            Left = 535
+            Width = 31
+            Height = 13
+            StyleElements = [seFont, seClient, seBorder]
+            ExplicitLeft = 494
+            ExplicitWidth = 31
+            ExplicitHeight = 13
+          end
+          inherited edtText: TEdit
+            Width = 303
+            Height = 21
+            StyleElements = [seFont, seClient, seBorder]
+            ExplicitWidth = 262
+            ExplicitHeight = 21
+          end
+          inherited checkboxItalic: TCheckBox
+            Left = 615
+            ExplicitLeft = 574
+          end
+          inherited checkboxBold: TCheckBox
+            Left = 615
+            ExplicitLeft = 574
+          end
+          inherited edtTextSize: TEdit
+            Left = 535
+            Height = 21
+            StyleElements = [seFont, seClient, seBorder]
+            ExplicitLeft = 494
+            ExplicitHeight = 21
+          end
+          inherited comboboxFontName: TComboBox
+            Left = 342
+            Height = 21
+            StyleElements = [seFont, seClient, seBorder]
+            ExplicitLeft = 301
+            ExplicitHeight = 21
+          end
+        end
+      end
     end
   end
   object ActionList1: TActionList
