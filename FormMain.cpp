@@ -141,13 +141,16 @@ std::unique_ptr<TStringList> TfrmMain::GetAreaMethodNameList()
 // Factory method
 std::unique_ptr<AreaPrj::IAreaCalculator> TfrmMain::MakeAreaCalculator() const
 {
+	static constexpr size_t StochasticPointCount = 10'000'000;
+
     switch ( GetItemKind( *comboboxAreaMethod, AreaMethodKind::Polynomial ) ) {
-        case AreaMethodKind::Stochastic:
-            return make_unique<StochasticAreaCalc>( 1000000 );
+		case AreaMethodKind::Stochastic:
+			return make_unique<StochasticAreaCalc>( StochasticPointCount );
         case AreaMethodKind::StochasticMT:
             return make_unique<StochasticMTAreaCalc>(
-                1000000, thread::hardware_concurrency()
-            );
+				StochasticPointCount * thread::hardware_concurrency(),
+				thread::hardware_concurrency()
+			);
         case AreaMethodKind::Polynomial:
             break;
     }
